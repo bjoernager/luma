@@ -1,3 +1,4 @@
+# include <luma/stdlibsock.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -9,6 +10,7 @@ int main(int argc, char * * argv) {
 	}
 	if((access(argv[0x1], F_OK) == 0)) {
 		printf("The file exists.\n");
+		luma__stdlibsock__gfx__crtwin();
 	}
 	else {
 		printf("The file doesn't exist.\n");
