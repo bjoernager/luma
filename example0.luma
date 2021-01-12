@@ -1,0 +1,14 @@
+> mod std
+>     mod gfx
+>         fn crtwin [str:nm int16:pos_x int16:pos_y int16:res_x int16:res_y bool:flscrn]
+
+frm std/gfx imp clswin crtwin
+
+int32:__main__ -fn []
+	print “Creating window...\n”
+	try std/gfx/crtwin “luma test” #0 #0 #714 #540 no
+	catch err
+		print “Error % when creating window" $.err
+		ret failure
+	std/gfx/clswin
+	ret success
