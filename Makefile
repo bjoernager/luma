@@ -1,6 +1,6 @@
 CC=clang
 CFLAGS+=-Iinclude -std=c2x -Wall -Wextra -Wpedantic -Werror
-CFLAGS+=-O2
+CFLAGS+=-O3
 LIBS=-lgmp -lmpfr -lxcb -lvulkan
 HDR=\
 	include/luma/stdlibsock/gfx.h \
@@ -13,7 +13,7 @@ SRC=\
 OBJ=$(SRC:.c=.o)
 luma.elf: $(OBJ)
 	$(CC) $(CCFLAGS) $(LIBS) $(OBJ) -o $@
-$(OBJ): $(HDR) $(SRC)
+$(OBJ): Makefile $(HDR) $(SRC)
 .PHONY: clean
 clean:
 	rm $(OBJ)
