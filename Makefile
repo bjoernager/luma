@@ -11,9 +11,9 @@ SRC=\
 	stdlibsock/gfx/destwin.c \
 	main.c
 OBJ=$(SRC:.c=.o)
-luma.elf: $(OBJ)
+luma.elf: Makefile $(OBJ)
 	$(CC) $(CCFLAGS) $(LIBS) $(OBJ) -o $@
-$(OBJ): Makefile $(HDR) $(SRC)
+$(OBJ): $(HDR) $(SRC)
 .PHONY: clean
 clean:
 	rm $(OBJ)
