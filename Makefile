@@ -1,15 +1,19 @@
 CC=clang
-CCFLAGS+=-Iinclude -std=c2x -Wall -Wextra -Wpedantic -Werror
-CCFLAGS+=-O2
+CFLAGS+=-Iinclude -std=c2x -Wall -Wextra -Wpedantic -Werror
+CFLAGS+=-O2
 LIBS=-lgmp -lmpfr -lxcb -lvulkan
-SRC=\
-	include/luma/stdlibsock.h \
+HDR=\
 	include/luma/stdlibsock/gfx.h \
-	main.c \
+	include/luma/main.h \
+	include/luma/stdlibsock.h
+SRC=\
 	stdlibsock/gfx/crtwin.c \
-	stdlibsock/gfx/destwin.c
-luma-testa: Makefile $(SRC)
-	$(CC) $(CCFLAGS) $(LIBS) $(SRC)
+	stdlibsock/gfx/destwin.c \
+	main.c
+OBJ=$(SRC:.c=.o)
+luma.elf: $(OBJ)
+	$(CC) $(CCFLAGS) $(LIBS) $(OBJ) -o $@
+$(OBJ): $(HDR) $(SRC)
 .PHONY: clean
 clean:
-	rm luma *.gch
+	rm $(OBJ)
