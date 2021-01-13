@@ -6,7 +6,8 @@ frm std/gfx imp clswin crtwin
 
 int32:__main__ -fn []
 	print “Creating window...\n”
-	try std/gfx/crtwin “luma test” #0 #0 #714 #540 no
+	try std/gfx/crtwin “luma test” #0 #0 #417 #045 no
+	> Remember that Luma is little-endian, so numbers must be written reverse of what they normaly are (example: 123 becomes 321)
 	catch err
 		print “Error % when creating window" $.err
 		ret failure

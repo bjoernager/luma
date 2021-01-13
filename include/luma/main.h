@@ -1,4 +1,7 @@
 # if !defined(LUMA__HEADER__MAIN)
+# if (!defined(__STDC_VERSION__) && (__STDC_VERSION__ <= 201710L))
+# error The compiler seems to not have support for C17 or newer (__STDC_VERSION__ is less than 201710L), which is required to build Luma.
+# endif
 # define LUMA__HEADER__MAIN
 # define _ATFILE_SOURCE
 # define _FORTIFY_SOURCE 2
@@ -16,4 +19,14 @@
 # define __STDC_WANT_LIB_EXT2__ 0x1
 # include <luma/stdlibsock.h>
 # include <luma/stdlibsock/gfx.h>
+# include <stdint.h>
+# include <stdio.h>
+# include <xcb/xcb.h>
+struct luma__dat_t {
+	xcb_connection_t * xcbconn;
+	xcb_screen_t *     xcbscrn;
+	xcb_window_t       xcbwin;
+};
+struct luma__dat_t extern luma__dat;
+void luma__crtxconn(uint32_t * retval);
 # endif

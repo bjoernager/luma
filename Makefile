@@ -1,7 +1,7 @@
 CC=clang
-CFLAGS+=-Iinclude -std=c2x -Wall -Wextra -Wpedantic -Werror
-CFLAGS+=-O3
-LIBS=-lgmp -lmpfr -lxcb -lvulkan
+CFLAGS+=-Iinclude -std=c17 -Wall -Wextra -Wpedantic -Werror
+CFLAGS+=-march=native -O3
+LIBS=-lgmp -lmpfr -lOpenGL -lpthread -lX11 -lxcb -lvulkan
 HDR=\
 	include/luma/stdlibsock/gfx.h \
 	include/luma/main.h \
@@ -9,9 +9,10 @@ HDR=\
 SRC=\
 	stdlibsock/gfx/crtwin.c \
 	stdlibsock/gfx/destwin.c \
+	initx.c \
 	main.c
 OBJ=$(SRC:.c=.o)
-luma.elf: Makefile $(OBJ)
+luma.elf: $(OBJ)
 	$(CC) $(CCFLAGS) $(LIBS) $(OBJ) -o $@
 $(OBJ): $(HDR) $(SRC)
 .PHONY: clean
