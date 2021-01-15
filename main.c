@@ -10,6 +10,7 @@ int main(int argc, char * * argv) {
 	}
 	if((access(argv[0x1], F_OK) == 0)) {
 		printf("\f");
+		luma__initstdlib__gfx();
 		luma__stdlibsock__gfx__crtwin("luma test",0x0,0x0,0x400,0x300,false);
 	}
 	else {

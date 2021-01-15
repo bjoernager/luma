@@ -10,14 +10,19 @@ uint8_t luma__stdlibsock__gfx__crtwin(char * nm,uint16_t pos_x,uint16_t pos_y,ui
 	if(flscrn) {
 		printf("Fullscreen is not supported yet!\n");
 	}
-	luma__crtxconn(&retval);
-	luma__dat.xcbscrn = xcb_setup_roots_iterator(xcb_get_setup(luma__dat.xcbconn)).data;
-	luma__dat.xcbwin  = xcb_generate_id(luma__dat.xcbconn);
-	xcb_create_window(luma__dat.xcbconn,XCB_COPY_FROM_PARENT,luma__dat.xcbwin,luma__dat.xcbscrn->root,pos_y,pos_x,res_x,res_y,0xa,XCB_WINDOW_CLASS_INPUT_OUTPUT,luma__dat.xcbscrn->root_visual,0x0,NULL);
-	xcb_change_property(luma__dat.xcbconn,XCB_PROP_MODE_REPLACE,luma__dat.xcbwin,XCB_ATOM_WM_NAME,XCB_ATOM_STRING,0x8,strlen(nm),nm);
-	xcb_map_window(luma__dat.xcbconn,luma__dat.xcbwin);
-	xcb_flush(luma__dat.xcbconn);
-	sleep(0x6);
-	xcb_disconnect(luma__dat.xcbconn);
+	if(strncmp(luma__dat.dispsrv,"wayland",0x10)) {
+
+	}
+	else if(strncmp(luma__dat.dispsrv,"x",0x10)) {
+		luma__initx(&retval);
+		luma__dat.xscrn = xcb_setup_roots_iterator(xcb_get_setup(luma__dat.xconn)).data;
+		luma__dat.xwin  = xcb_generate_id(luma__dat.xconn);
+		xcb_create_window(luma__dat.xconn,XCB_COPY_FROM_PARENT,luma__dat.xwin,luma__dat.xscrn->root,pos_y,pos_x,res_x,res_y,0xa,XCB_WINDOW_CLASS_INPUT_OUTPUT,luma__dat.xscrn->root_visual,0x0,NULL);
+		xcb_change_property(luma__dat.xconn,XCB_PROP_MODE_REPLACE,luma__dat.xwin,XCB_ATOM_WM_NAME,XCB_ATOM_STRING,0x8,strlen(nm),nm);
+		xcb_map_window(luma__dat.xconn,luma__dat.xwin);
+		xcb_flush(luma__dat.xconn);
+		sleep(0x6);
+		xcb_disconnect(luma__dat.xconn);
+	}
 	return 0x0;
 }

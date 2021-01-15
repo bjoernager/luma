@@ -20,13 +20,13 @@
 # include <luma/stdlibsock.h>
 # include <luma/stdlibsock/gfx.h>
 # include <stdint.h>
-# include <stdio.h>
 # include <xcb/xcb.h>
 struct luma__dat_t {
-	xcb_connection_t * xcbconn;
-	xcb_screen_t *     xcbscrn;
-	xcb_window_t       xcbwin;
+	char *             dispsrv;
+	xcb_connection_t * xconn;
+	xcb_screen_t *     xscrn;
+	xcb_window_t       xwin;
 };
 struct luma__dat_t extern luma__dat;
-void luma__crtxconn(uint32_t * retval);
+void luma__initx(uint32_t * retval);
 # endif

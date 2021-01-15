@@ -1,7 +1,7 @@
 CC=clang
 CFLAGS+=-Iinclude -std=c17 -Wall -Wextra -Wpedantic -Werror
 CFLAGS+=-march=native -O3
-LIBS=-lgmp -lmpfr -lOpenGL -lpthread -lX11 -lxcb -lvulkan
+LIBS=-lgmp -lmpfr -lpthread -lxcb -lvulkan -lwayland-client
 HDR=\
 	include/luma/stdlibsock/gfx.h \
 	include/luma/main.h \
@@ -9,6 +9,7 @@ HDR=\
 SRC=\
 	stdlibsock/gfx/crtwin.c \
 	stdlibsock/gfx/destwin.c \
+	checkdispsrv.c \
 	initx.c \
 	main.c
 OBJ=$(SRC:.c=.o)
