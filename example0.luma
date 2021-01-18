@@ -1,15 +1,9 @@
-> mod std
->     mod gfx
->         fn crtwin [str:nm int16:pos_x int16:pos_y int16:res_x int16:res_y bool:flscrn]
-
-frm std/gfx imp clswin crtwin
-
-int32:__main__ -fn []
+frm /std/gfx imp clswin crtwin win_t
+void_t:main -fn []
 	print “Creating window...\n”
-	try std/gfx/crtwin “luma test” #0 #0 #417 #045 no
+	/std/gfx/win_t:win
 	> Remember that Luma is little-endian, so numbers must be written reverse of what they normaly are (example: 123 becomes 321)
-	catch err
-		print “Error % when creating window" $.err
-		ret failure
-	std/gfx/clswin
-	ret success
+	catch (win = (/std/gfx/crtwin “luma test” #0 #0 #417 #045 no))
+		print (“Error " + $errval + " when creating window")
+		thrw #1
+	/std/gfx/clswin
