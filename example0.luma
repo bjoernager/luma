@@ -1,9 +1,0 @@
-frm /std/gfx imp clswin crtwin win_t
-void_t:main -fn []
-	print “Creating window...\n”
-	/std/gfx/win_t:win
-	> Remember that Luma is little-endian, so numbers must be written reverse of what they normaly are (example: 123 becomes 321)
-	catch (win = (/std/gfx/crtwin “luma test” #0 #0 #417 #045 no))
-		print (“Error " + $errval + " when creating window")
-		thrw #1
-	/std/gfx/clswin
