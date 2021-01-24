@@ -13,9 +13,11 @@ std::uint8_t luma::stdlibsock::gfx::crtwin(std::basic_string<char> nm,std::uint1
 		luma::initgfx();
 	}
 	if(flscrn) {
-		std::cout << "Fullscreen is not supported yet!\n";
+		std::cerr << "Fullscreen is not supported yet!\n";
 	}
-	if constexpr(luma::usex == 0x1) {
+	if(luma::dat.dispsrvproto == luma::dispsrvproto_t::wayland) {
+	}
+	else if(luma::dat.dispsrvproto == luma::dispsrvproto_t::x) {
 		luma::dbgmsg("Creating X window... ");
 		::xcb_create_window(luma::dat.xconn,XCB_COPY_FROM_PARENT,luma::dat.xwin,luma::dat.xscrn->root,pos_y,pos_x,res_x,res_y,0xa,XCB_WINDOW_CLASS_INPUT_OUTPUT,luma::dat.xscrn->root_visual,0x0,nullptr);
 		::xcb_change_property(luma::dat.xconn,XCB_PROP_MODE_REPLACE,luma::dat.xwin,XCB_ATOM_WM_NAME,XCB_ATOM_STRING,0x8,nm.size(),nm.c_str());
@@ -23,9 +25,6 @@ std::uint8_t luma::stdlibsock::gfx::crtwin(std::basic_string<char> nm,std::uint1
 		::xcb_flush(luma::dat.xconn);
 		luma::dbgmsg("O.K.\n");
 	}
-	else {
-	}
-	std::cout <<
 	::sleep(0x6);
 	luma::termgfx();
 	return 0x0;

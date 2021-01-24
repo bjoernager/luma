@@ -16,8 +16,17 @@ HDRS_CXX = \
 SRCS_CXX = \
 	stdlibsock/gfx/crtwin.cc \
 	stdlibsock/gfx/destwin.cc \
+	setdispsrvproto.cc \
+	archstr.cc \
+	dbgmsg.cc \
+	getenv.cc \
 	initgfx.cc \
+	kernelstr.cc \
 	main.cc \
+	msg.cc \
+	msgerr.cc \
+	msgout.cc \
+	strlen.cc \
 	termgfx.cc
 SRCS=$(SRCS_CXX)
 OBJS=$(SRCS:.cc=.o)

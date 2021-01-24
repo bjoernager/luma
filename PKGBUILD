@@ -1,7 +1,7 @@
 pkgname="luma"
-pkgver=x
-pkgrel=10
-arch=("any")
-license=("AGPL3")
-depends=("glm" "gmp" "libxcb" "mpfr" "wayland")
-makedepends=("vulkan-headers")
+pkgver=11
+pkgrel=1
+arch=('any')
+license=('AGPL3')
+depends=('gmp' 'libxcb' 'mpfr' 'wayland')
+makedepends=('glm' 'vulkan-headers')
