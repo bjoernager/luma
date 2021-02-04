@@ -1,25 +1,16 @@
 # if !defined(LUMA__HEADER__MAIN)
 # define LUMA__HEADER__MAIN
-# include <fcntl.h>
-# include <luma/stdlibsock.hh>
-# include <luma/stdlibsock/gfx.hh>
 # include <vector>
-# include <vulkan/vulkan.h>
-# include <wayland-client.h>
-# include <xcb/xcb.h>
-// enum class -> class -> operator -> constexpr -> function -> variable -> inline function
+// constexpr -> const -> normal
+// typedef -> enum class -> class -> operator -> variable -> function
 namespace luma {
+	typedef decltype(nullptr) nullptr_t; // Official way to define nullptr_t
 	enum class arch_t {
 		aarch64,
 		amd64,
 		ia64,
 		ppc64,
 		unknown,
-	};
-	enum class dispsrvproto_t {
-		unknown,
-		wayland,
-		x,
 	};
 	enum class kernel_t {
 		darwinos,
@@ -32,71 +23,65 @@ namespace luma {
 		openbsd,
 		unknown,
 	};
-	class dat_t {
+	class app_t {
 	public:
-		bool                               gfxisinit;
-		luma::dispsrvproto_t               dispsrvproto= luma::dispsrvproto_t::wayland;
-		std::vector<VkExtensionProperties> vkexts;
-		std::vector<VkPhysicalDevice>      vkphysdevs;
-		::VkApplicationInfo                vkappinf     {};
-		::VkInstance                       vkinst;
-		::VkInstanceCreateInfo             vkinstcrtinf {};
-		::VkResult                         vkreslt;
-		::wl_buffer *                      wlbuff       = nullptr;
-		::wl_display *                     wldisp       = nullptr;
-		::wl_shell_surface *               wlsurf       = nullptr;
-		::xcb_connection_t *               xconn        = nullptr;
-		::xcb_screen_t *                   xscrn        = nullptr;
-		::xcb_window_t                     xwin;
-	} extern dat;
-	bool constexpr debug =
+		app_t(int const argc, char const * * argv);
+		~app_t();
+	private:
+		bool constexpr static debug =
 # if defined(NDEBUG)
-	false;
+		false;
 # else
-	true;
+		true;
 # endif
-	luma::arch_t constexpr arch = luma::arch_t::
+		luma::arch_t constexpr static arch = luma::arch_t::
 # if defined(__aarch64__)
-	aarch64;
+		aarch64;
 # elif (defined(_M_AMD64) || defined(__amd64) || defined(__amd64__) || defined(__x86_64) || defined(x86_64__))
-	amd64;
+		amd64;
 # elif (defined(_IA64) defined(_M_IA64) || defined(__IA64__) || defined(__ia64__) || defined(__itanium__))
-	ia64;
+		ia64;
 # elif (defined(_ARCH_PPC64) || defined(__powerpc64__) || defined(__PPC64__) || defined(__ppc64__))
-	ppc64;
+		ppc64;
 # else
-	unknown;
+		unknown;
 # endif
-	luma::kernel_t constexpr kernel = luma::kernel_t::
+		luma::kernel_t constexpr static kernel = luma::kernel_t::
 # if defined(__APPLE__)
-	darwinos;
+		darwinos;
 # elif defined(__DragonFly__)
-	dragonflybsd;
+		dragonflybsd;
 # elif defined(__FreeBSD__)
-	freebsd;
+		freebsd;
 # elif (defined(__GNU__) || defined(__gnu_hurd__))
-	hurd;
+		hurd;
 # elif defined(__linux__)
-	linux;
+		linux;
 # elif defined(__minix)
-	minix;
+		minix;
 # elif defined(__NetBSD__)
-	netbsd;
+		netbsd;
 # elif defined(__OpenBSD__)
-	openbsd;
+		openbsd;
 # else
-	unknown;
+		unknown;
 # endif
-	char const * archstr(luma::arch_t arch);
-	char const * getenv(char const * envvar);
-	char const * kernelstr(luma::kernel_t kernel);
-	int          strlen(char const * str);
-	void         dbgmsg(char const * msg);
-	void         initgfx();
-	void         msg(int pipe,char const * msg);
-	void         msgerr(char const * msg);
-	void         msgout(char const * msg);
-	void         setdispsrvproto();
-	void         termgfx();
+		int               stderr = 0x0;
+		int               stdout = 0x0;
+		char const *      archstr(luma::arch_t arch) noexcept;
+		char const *      getenv(char const * envvar);
+		char const *      kernelstr(luma::kernel_t kernel) noexcept;
+		char const *      strcut(char const * str,int pos,int len);
+		int               strcmp(char const * lstr,char const * rstr) noexcept;
+		int               strlen(char const * str) noexcept;
+		void              arghandl(char const * arg);
+		void              dbgmsgf(char const * msg);
+		[[noreturn]] void exit() noexcept;
+		//template<typename T,typename ... Args>
+		//void              msgf(char const * msg, Args const & ... args);
+		void              msgf(int pipe,char const * buf);
+		void              msgferr(char const * buf);
+		void              msgfout(char const * buf);
+	};
 }
 # endif

@@ -1,5 +1,5 @@
 # include <luma/main.hh>
-char const * luma::archstr(luma::arch_t arch) {
+char const * luma::app_t::archstr(luma::arch_t arch) noexcept {
 	char const * str = "";
 	switch(arch) {
 	default:

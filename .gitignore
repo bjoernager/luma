@@ -1,9 +1,2 @@
-*
-!*.cc
-!*.gitignore
-!*.hh
-!*.luma
-!COPYING
-!Makefile
-!PKGBUILD
-!README
+*.elf
+*.o

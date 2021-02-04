@@ -1,5 +1,5 @@
 # include <luma/main.hh>
-char const * luma::kernelstr(luma::kernel_t kernel) {
+char const * luma::app_t::kernelstr(luma::kernel_t kernel) noexcept {
 	char const * str = "";
 	switch(kernel) {
 	default:

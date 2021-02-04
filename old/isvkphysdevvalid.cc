@@ -1,5 +1,5 @@
 # include <luma/main.hh>
 # include <vulkan/vulkan.h>
 //isVulkanPhysicalDeviceValid
-void luma::isvkphysdevvalid(VkPhysicalDevice & dev) {
+void luma::app_t::isvkphysdevvalid(VkPhysicalDevice & dev) {
 }

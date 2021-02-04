@@ -7,27 +7,25 @@ ifeq ($(LUMA__X),1)
 CXXFLAGS += -DLUMA__X=true
 endif
 CXXFLAGS += -std=c++20 -Wall -Wextra -Wpedantic
-CXXFLAGS += -march=native -O3
+CXXFLAGS += -march=native -mtune=native -O3
 LDFLAGS = -lgmp -lmpfr -lpthread -lvulkan -lwayland-client -lxcb
 HDRS_CXX = \
-	include/luma/stdlibsock/gfx.hh \
-	include/luma/main.hh \
-	include/luma/stdlibsock.hh
+	include/luma/main.hh
 SRCS_CXX = \
-	stdlibsock/gfx/crtwin.cc \
-	stdlibsock/gfx/destwin.cc \
-	setdispsrvproto.cc \
-	archstr.cc \
-	dbgmsg.cc \
-	getenv.cc \
-	initgfx.cc \
-	kernelstr.cc \
-	main.cc \
-	msg.cc \
-	msgerr.cc \
-	msgout.cc \
-	strlen.cc \
-	termgfx.cc
+	src/luma/app_t/app_t.cc \
+	src/luma/app_t/archstr.cc \
+	src/luma/app_t/arghandl.cc \
+	src/luma/app_t/dbgmsgf.cc \
+	src/luma/app_t/exit.cc \
+	src/luma/app_t/getenv.cc \
+	src/luma/app_t/msgf.cc \
+	src/luma/app_t/msgferr.cc \
+	src/luma/app_t/msgfout.cc \
+	src/luma/app_t/kernelstr.cc \
+	src/luma/app_t/strcmp.cc \
+	src/luma/app_t/strcut.cc \
+	src/luma/app_t/strlen.cc \
+	src/main.cc
 SRCS=$(SRCS_CXX)
 OBJS=$(SRCS:.cc=.o)
 luma.elf: $(OBJS)
