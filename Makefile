@@ -8,27 +8,16 @@ CXXFLAGS += -DLUMA__X=true
 endif
 CXXFLAGS += -std=c++20 -Wall -Wextra -Wpedantic
 CXXFLAGS += -march=native -mtune=native -O3
-LDFLAGS = -lgmp -lmpfr -lpthread -lvulkan -lwayland-client -lxcb
+LDFLAGS = -lfmt -lgmp -lmpfr -lpthread -lvulkan -lwayland-client -lxcb
 HDRS_CXX = \
-	include/luma/main.hh
+	include/luma.hh
 SRCS_CXX = \
-	src/luma/app_t/app_t.cc \
-	src/luma/app_t/archstr.cc \
-	src/luma/app_t/arghandl.cc \
-	src/luma/app_t/dbgmsgf.cc \
-	src/luma/app_t/exit.cc \
-	src/luma/app_t/getenv.cc \
-	src/luma/app_t/msgf.cc \
-	src/luma/app_t/msgferr.cc \
-	src/luma/app_t/msgfout.cc \
-	src/luma/app_t/kernelstr.cc \
-	src/luma/app_t/strcmp.cc \
-	src/luma/app_t/strcut.cc \
-	src/luma/app_t/strlen.cc \
-	src/main.cc
+	src/main.cc \
+	src/luma/luma.cc \
+	src/luma/arghandl.cc
 SRCS=$(SRCS_CXX)
 OBJS=$(SRCS:.cc=.o)
-luma.elf: $(OBJS)
+luma.bin: $(OBJS)
 	$(CXX) $(LDFLAGS) -o $@ $(OBJS)
 $(OBJS): $(HDRS_CXX) $(SRCS_CXX)
 .PHONY: clean

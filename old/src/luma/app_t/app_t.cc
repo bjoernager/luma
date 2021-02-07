@@ -1,4 +1,5 @@
 # include <fcntl.h>
+# include <iostream>
 # include <luma/main.hh>
 # include <unistd.h>
 luma::app_t::app_t(int const argc,char const * * argv) {
@@ -18,7 +19,21 @@ luma::app_t::app_t(int const argc,char const * * argv) {
 	this->msgfout(this->kernelstr(this->kernel));
 	if(!::access(argv[0x1],R_OK)) {
 	 	int lumafile = ::open(argv[0x1],O_RDONLY);
-//char8_t const * validtoks = "\t 2abcdefghijklmnopqrstuvwxyz0123456789#()*+<=>×÷↊↋−≠⋜⋝\n";
+		for(int line = 0x0,pos = 0x0;;++pos) {
+			char * tok;
+			::read(lumafile,&tok,0x1);
+			this->msgfout("Here?\n");
+			std::cout << line << ":" << pos << "=" << "\u000A";
+			int pipe = ::open("/dev/stdout",O_WRONLY);
+			this->msgf(pipe,tok,0x4);
+			if(this->strcmp(tok,"\u000A") == 0x0) {
+				++line;
+			}
+			else if(this->strcmp(tok,"\u0061") == 0x0) {
+				this->msgfout("\'a\' detected!");
+			}
+		}
+		/*
 		char const * toks[] = {
 			"\u0009", // Horizontal Tabulation
 			"\u000A", // New Line (Nl)
@@ -68,6 +83,7 @@ luma::app_t::app_t(int const argc,char const * * argv) {
 			"\u2264", // Less-Than or Equal To
 			"\u2265", // Greater-Than or Equal To
 		};
+		*/
 	}
 	else {
 		this->msgferr("The file doesn\'t exist.\n");

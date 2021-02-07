@@ -1,17 +1,12 @@
-\ '\' defines single-line comments.
-\<
-	'\<' followed by '\>' defines multi-line comments.
-	The contents of multi-line comments must be indented.
-	Indentation is always a tab in Luma.
-\>
-\ Modules are automaticly imported by the interpreter.
-\ Modules are folders with source code. Each source file contains the definition of the name of the file.
-\ /gfx/win_t (example module) will be defined in the file win_t.luma which itself is inside the gfx folder.
-\ This makes is easy for the interpreter to find the definitions. Therefore, each file in a module must only contain one definition.
-\ This has the drawback of making single-file programs impossible if they want to utilize non-centralized modules.
-\ A fix to this is to put the source files in an archive (like a Tarball), which is already a standard thing to do.
-\ Define variable main of type void_t as function that doesn't return.
-void_t:main -fn [] -noret
-	// Use '$' followed by a dozenal number to
-	/std/fout "1 + 1 = $0" (#1 + #1)
-	exit
+def fn /std/void [/std/int28 argc | /std/arr /std/str args] -noret main
+	ifeq argc #3 args.#1 “Hello” args.#2 “there!”
+		call /std/fout [“General Kenobi?” | $000A]
+	else
+		def var /std/int28 iter
+		loop @iter
+			ifeq iter #10
+				brk
+			call /std/fout [“Luma FTW!” | $000A]
+		call /std/fout [“"Luma FTW!" should have been written 10 times.” | $000A]
+	exit #0
+X

@@ -1,6 +1,6 @@
 # if !defined(LUMA__HEADER__MAIN)
 # define LUMA__HEADER__MAIN
-# include <vector>
+# include <cstddef>
 // constexpr -> const -> normal
 // typedef -> enum class -> class -> operator -> variable -> function
 namespace luma {
@@ -79,7 +79,7 @@ namespace luma {
 		[[noreturn]] void exit() noexcept;
 		//template<typename T,typename ... Args>
 		//void              msgf(char const * msg, Args const & ... args);
-		void              msgf(int pipe,char const * buf);
+		void              msgf(int pipe,char const * buf,std::size_t count);
 		void              msgferr(char const * buf);
 		void              msgfout(char const * buf);
 	};

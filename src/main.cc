@@ -1,6 +1,4 @@
-# include <fcntl.h>
-# include <luma/main.hh>
-# include <unistd.h>
+# include <luma.hh>
 int main(int const argc,char const * * argv) {
-	luma::app_t app(argc,argv);
+	::luma luma(argc,argv);
 }

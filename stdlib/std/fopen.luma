@@ -1,0 +1,1 @@
+def fn /std/file_t [/std/str_t | /std/fmode_t] fopen
