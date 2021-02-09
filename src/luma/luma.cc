@@ -6,7 +6,8 @@
 # include <unistd.h>
 [[noreturn]] luma::luma(int const argc,char const * * argv) {
 	this->arghandl(argc,argv);
-	int file      = ::open("test.luma",O_RDONLY);
+	std::printf("Will open \"%s\".\u000A",this->lumafile.c_str());
+	int file      = ::open(this->lumafile.c_str(),O_RDONLY);
 	char tok      = '\0';
 	char word[0x1000];
 	int wordpos = 0x0;

@@ -17,9 +17,9 @@ SRCS_CXX = \
 	src/luma/arghandl.cc
 SRCS=$(SRCS_CXX)
 OBJS=$(SRCS:.cc=.o)
-luma.bin: $(OBJS)
+luma: $(OBJS)
 	$(CXX) $(LDFLAGS) -o $@ $(OBJS)
 $(OBJS): $(HDRS_CXX) $(SRCS_CXX)
 .PHONY: clean
 clean:
-	rm $(OBJS)
+	rm luma $(OBJS)
