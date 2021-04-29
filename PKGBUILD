@@ -1,6 +1,6 @@
 # Maintainer: Gabriel Jensen
 pkgname=luma
-pkgver=19.0.0
+pkgver=20.0.0
 pkgrel=1
 pkgdesc="luma programming language - runtime environment"
 arch=("any")

@@ -15,7 +15,7 @@ uint8_t const * luma_utf8enc(uint32_t * codeps) {
 			return NULL;
 		}
 		if(codep > 0xFFFF) { // 4 bytes.
-			outsz += (size_t){0x2};
+			outsz += (size_t){0x4};
 			continue;
 		}
 		if(codep > 0x7FF) { // 3 bytes.
@@ -38,19 +38,29 @@ uint8_t const * luma_utf8enc(uint32_t * codeps) {
 	for(size_t n = (size_t){0x0};n < sz;n += (size_t){0x1}) {
 		uint32_t codep = codeps[n]; // Current Unicode codepoint.
 		if(codep > 0xFFFF) {
-			outstr[outn] = (uint8_t){0x3F};
+			outstr[outn] = (uint8_t){0xF0 + (codep >> 0x12)};
+			outn += (size_t){0x1};
+			outstr[outn] = (uint8_t){0x80 + ((codep >> 0xC) & 0x3F)};
+			outn += (size_t){0x1};
+			outstr[outn] = (uint8_t){0x80 + ((codep >> 0x6) & 0x3F)};
+			outn += (size_t){0x1};
+			outstr[outn] = (uint8_t){0x80 + ((codep >> 0x0) & 0x3F)};
 			outn += (size_t){0x1};
 			continue;
 		}
 		if(codep > 0x7FF) {
-			outstr[outn] = (uint8_t){0x3F};
+			outstr[outn] = (uint8_t){0xE0 + (codep >> 0xC)};
+			outn += (size_t){0x1};
+			outstr[outn] = (uint8_t){0x80 + ((codep >> 0x6) & 0x3F)};
+			outn += (size_t){0x1};
+			outstr[outn] = (uint8_t){0x80 + ((codep >> 0x0) & 0x3F)};
 			outn += (size_t){0x1};
 			continue;
 		}
 		if(codep > 0x7F) {
 			outstr[outn] = (uint8_t){0xC0 + (codep >> 0x6)};
 			outn += (size_t){0x1};
-			outstr[outn] = (uint8_t){0x80 + ((uint8_t){codep << 0x2} >> 0x2)};
+			outstr[outn] = (uint8_t){0x80 + ((codep >> 0x0) & 0x3F)};
 			outn += (size_t){0x1};
 			continue;
 		}

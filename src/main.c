@@ -14,9 +14,7 @@ int main(void) {
 	for(size_t i = (size_t){0x0};i < sizeof code / sizeof code[0x0];++i) {
 		printf("Got code %d.\n",code[i]);
 	}
-	uint8_t const * msg = luma_utf8enc((uint32_t[]){0x00A2,0x2C,0x20Ac,0x2C,0x218A,0x2C,0x1F44B,0x0});
-	printf("%u\n",msg[0x0]);
-	printf("%u\n",msg[0x1]);
+	uint8_t const * msg = luma_utf8enc((uint32_t[]){0x00A2,0x2C,0x939,0x2C,0x10348,0x2C,0x20Ac,0x2C,0x218A,0x2C,0x1F44B,0x0});
 	printf("%s\n",msg);
 	//uint32_t * utf = luma_utf8dec(msg);
 	free((void *)msg);

@@ -1,3 +1,8 @@
+# 18
+
+* Complete UTF-8 encoder.
+* Fix #1.
+
 # 17
 
 * Reformat changelog to Markdown.
