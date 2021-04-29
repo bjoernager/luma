@@ -1,1 +1,0 @@
-def fn /std/void_t [/std/file_t | /std/str_t] fwrite

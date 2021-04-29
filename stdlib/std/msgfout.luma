@@ -1,2 +1,0 @@
-def fn /std/void_t [/str_t msg] /std/msgfout
-	call /std/fopen []

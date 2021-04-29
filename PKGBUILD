@@ -1,7 +1,19 @@
-pkgname="luma"
-pkgver=12
+# Maintainer: Gabriel Jensen
+pkgname=luma
+pkgver=19.0.0
 pkgrel=1
-arch=('any')
-license=('AGPL3')
-depends=('gmp' 'libxcb' 'mpfr' 'wayland')
-makedepends=('vulkan-headers')
+pkgdesc="luma programming language - runtime environment"
+arch=("any")
+url="https://mandelbrot.dk/luma/luma"
+license=("AGPL3")
+makedepends=("git")
+source=("git+https://mandelbrot.dk/luma/luma.git")
+sha512sums=("SKIP")
+build() {
+	cd "$srcdir/$pkgname"
+	make -j$(nproc)
+}
+package() {
+	cd "$srcdir/$pkgname"
+	make DESTDIR="$pkgdir/usr" install
+}

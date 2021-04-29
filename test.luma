@@ -1,5 +1,0 @@
-def  var ./std/int num
-cpy  #0  .num
-inc  .num
-mult .num #2
-pow  .num #4
