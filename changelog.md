@@ -1,3 +1,10 @@
+# 19
+
+* Improve Makefile.
+* Improve UTF-8 encoder.
+* Complete UTF-8 decoder.
+* Create basic print function.
+
 # 18
 
 * Complete UTF-8 encoder.
@@ -6,8 +13,8 @@
 # 17
 
 * Reformat changelog to Markdown.
-* Completely rework codebase (multiple times, in 3 languages). Finally decide on C.
-* Split project into three projects: *libluma* (API), *luma* (interpreter), and *luma-docs* (documentation).
+* Completely rework codebase (multiple times, in C, C++, Objective-C and Rust). Finally decide on C.
+* Split project into three seperate projects: *libluma* (API), *luma* (interpreter), and *luma-docs* (documentation).
 * Merge with *libluma*.
 * Create language sample.
 * Use STDC functions instead of POSIX where possible.

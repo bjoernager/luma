@@ -1,5 +1,10 @@
 CC      = clang
 CFLAGS  = -std=c2x -Wall -Wextra -Wpedantic -I include -march=native -mtune=native -O3
+ifneq ($(debug),1)
+CFLAGS += -DNDEBUG
+else
+CFLAGS += -g
+endif
 LDFLAGS =
 SRCS = \
 	src/luma/print.c \
@@ -14,6 +19,7 @@ HDRS = \
 OBJS = $(SRCS:.c=.o)
 luma: $(OBJS)
 	$(CC) $(LDFLAGS) $^ -o $@
+$(OBJS): $(HDRS)
 .PHONY: run
 run: luma
 	./luma
