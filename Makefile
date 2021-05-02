@@ -1,5 +1,5 @@
 CC      = clang
-CFLAGS  = -std=c2x -Wall -Wextra -Wpedantic -I include -march=native -mtune=native -O3
+CFLAGS  = -std=c17 -Wall -Wextra -Wpedantic -I include -march=native -mtune=native -O3
 ifneq ($(debug),1)
 CFLAGS += -DNDEBUG
 else
@@ -17,7 +17,8 @@ HDRS = \
 	include/luma/utf8dec.h \
 	include/luma/utf8enc.h
 OBJS = $(SRCS:.c=.o)
-luma: $(OBJS)
+BIN  = luma
+$(BIN): $(OBJS)
 	$(CC) $(LDFLAGS) $^ -o $@
 $(OBJS): $(HDRS)
 .PHONY: run
@@ -26,6 +27,12 @@ run: luma
 .PHONY: clean
 clean:
 	rm $(OBJS)
-.PHONT: purge
+.PHONY: purge
 purge:
-	rm luma $(OBJS)
+	rm $(BIN) $(OBJS)
+.PHONY: install
+install: $(BIN)
+	install --mode=555 $(BIN) $(DESTDIR)/bin
+.PHONY: uninstall
+uninstall:
+	rm --force --recursive $(DESTDIR)/bin/$(BIN)

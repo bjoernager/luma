@@ -4,7 +4,7 @@
 
 ## Copyright & License
 
-Copyright (c) 2021 Gabriel Jensen.
+Copyright 2021 Gabriel Jensen.
 
 All rights reserved.
 

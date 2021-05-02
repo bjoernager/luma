@@ -1,3 +1,10 @@
+# 1↊
+
+* Remove memory leaks.
+* Require C17 instead of C2x.
+* Create license notices in source files.
+* Create install and uninstall targets in Makefile.
+
 # 19
 
 * Improve Makefile.

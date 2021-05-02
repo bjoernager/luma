@@ -1,8 +1,23 @@
+/*
+	Copyright 2021 Gabriel Jensen
+
+	This file is part of luma.
+
+	luma is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or	(at your option) any later version.
+
+	luma is distributed in the hope that it will be useful,	but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+	See the	GNU Affero General Public License for more details.
+
+	You should have received a copy of the GNU Affero General Public License along with luma.
+
+	If not, see <https://www.gnu.org/licenses/>.
+*/
 # include <luma/utf8enc.h>
 # include <stdint.h>
 # include <stdio.h>
 # include <stdlib.h>
-uint8_t const * luma_utf8enc(uint32_t * codeps,size_t * outszptr) {
+int luma_utf8enc(uint32_t * codeps,uint8_t * * utf,size_t * outszptr) {
 	size_t sz    = (size_t){0x0}; // Size of input array (bytes).
 	size_t outsz = (size_t){0x0}; // Size of output array /bytes).
 	for(size_t n = (size_t){0x0};;n += (size_t){0x1}) { // First pass: get size of input array, and determine size of output array.
@@ -12,7 +27,7 @@ uint8_t const * luma_utf8enc(uint32_t * codeps,size_t * outszptr) {
 			break;
 		}
 		if(codep >= (uint32_t){0x110000}) { // Codepoint out of range.
-			return NULL;
+			return 0x1;
 		}
 		if(codep >= (uint32_t){0x10000}) { // 4 bytes.
 			outsz += (size_t){0x4};
@@ -33,36 +48,35 @@ uint8_t const * luma_utf8enc(uint32_t * codeps,size_t * outszptr) {
 	if(outszptr != NULL) {
 		*outszptr = outsz;
 	}
-	uint8_t * str              = malloc(outsz); // Allocate space for output array.
-	str[outsz - (size_t){0x1}] = (uint8_t){0x0}; // Create null-terminator on output array.
+	*utf                        = malloc(outsz); // Allocate space for output array.
+	(*utf)[outsz - (size_t){0x1}] = (uint8_t){0x0}; // Create null-terminator on output array.
 	for(size_t n = (size_t){0x0}, outn = (size_t){0x0};n < sz;n += (size_t){0x1},outn += (size_t){0x1}) { // Second pass: encode each codepoint into UTF-8.
-		uint32_t codep = codeps[n]; // Current Unicode codepoint.
-		if(codep >= 0x10000) { // Four bytes.
-			str[outn] = (uint8_t){0xF0 + (codep >> 0x12)};
-			outn      += (size_t){0x1};
-			str[outn] =  (uint8_t){0x80 + ((codep >> 0xC) & 0x3F)};
-			outn      += (size_t){0x1};
-			str[outn] =  (uint8_t){0x80 + ((codep >> 0x6) & 0x3F)};
-			outn      += (size_t){0x1};
-			str[outn] =  (uint8_t){0x80 + (codep & 0x3F)};
+		if(codeps[n] >= 0x10000) { // Four bytes.
+			(*utf)[outn] = (uint8_t){0xF0 + (codeps[n] >> 0x12)};
+			outn         += (size_t){0x1};
+			(*utf)[outn] =  (uint8_t){0x80 + ((codeps[n] >> 0xC) & 0x3F)};
+			outn         += (size_t){0x1};
+			(*utf)[outn] =  (uint8_t){0x80 + ((codeps[n] >> 0x6) & 0x3F)};
+			outn         += (size_t){0x1};
+			(*utf)[outn] =  (uint8_t){0x80 + (codeps[n] & 0x3F)};
 			continue;
 		}
-		if(codep >= 0x800) { // Three bytes.
-			str[outn] =  (uint8_t){0xE0 + (codep >> 0xC)};
-			outn      += (size_t){0x1};
-			str[outn] =  (uint8_t){0x80 + ((codep >> 0x6) & 0x3F)};
-			outn      += (size_t){0x1};
-			str[outn] =  (uint8_t){0x80 + (codep & 0x3F)};
+		if(codeps[n] >= 0x800) { // Three bytes.
+			(*utf)[outn] =  (uint8_t){0xE0 + (codeps[n] >> 0xC)};
+			outn         += (size_t){0x1};
+			(*utf)[outn] =  (uint8_t){0x80 + ((codeps[n] >> 0x6) & 0x3F)};
+			outn         += (size_t){0x1};
+			(*utf)[outn] =  (uint8_t){0x80 + (codeps[n] & 0x3F)};
 			continue;
 		}
-		if(codep >= 0x80) { // Two bytes.
-			str[outn] =  (uint8_t){0xC0 + (codep >> 0x6)};
-			outn      += (size_t){0x1};
-			str[outn] =  (uint8_t){0x80 + (codep & 0x3F)};
+		if(codeps[n] >= 0x80) { // Two bytes.
+			(*utf)[outn] =  (uint8_t){0xC0 + (codeps[n] >> 0x6)};
+			outn         += (size_t){0x1};
+			(*utf)[outn] =  (uint8_t){0x80 + (codeps[n] & 0x3F)};
 			continue;
 		}
 		// One byte.
-		str[outn] =  codep;
+		(*utf)[outn] = codeps[n];
 	}
-	return (uint8_t const *){str};
+	return 0x0;
 }
