@@ -32,6 +32,7 @@ purge:
 	rm $(BIN) $(OBJS)
 .PHONY: install
 install: $(BIN)
+	mkdir --parents $(DESTDIR)/bin
 	install --mode=555 $(BIN) $(DESTDIR)/bin
 .PHONY: uninstall
 uninstall:

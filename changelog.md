@@ -1,3 +1,7 @@
+# 1↋
+
+* Create *bin* folder in destination directory.
+
 # 1↊
 
 * Remove memory leaks.
