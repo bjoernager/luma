@@ -24,7 +24,7 @@
 #include <stdint.h>
 #include <stdio.h>
 
-#define luma_ver 0x18
+#define luma_ver 0x1A
 
 typedef uint8_t  luma_byte;
 typedef uint16_t luma_ptr;

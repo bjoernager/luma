@@ -1,3 +1,7 @@
+# 22
+
+* Fix version number being out of date.
+
 # 21
 
 * Remove old readme.
