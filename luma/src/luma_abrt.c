@@ -23,7 +23,7 @@
 #include <stdlib.h>
 
 void luma_abrt(void) {
-	fprintf(stderr,"Abort called!\n");
-	luma_memDump("memdump");
+	fprintf(stderr,"Abort invoked\n");
+	luma_memDump();
 	exit(EXIT_FAILURE);
 }

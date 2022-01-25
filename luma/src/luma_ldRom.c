@@ -19,7 +19,14 @@
 
 #include "luma.h"
 
-void luma_setPtrVal(luma_ptr const _addr,luma_ptr const _val) {
-	luma_mem[_addr]       = (luma_byte)(_val >> 0x8);
-	luma_mem[_addr + 0x1] = (luma_byte)_val;
+#include <inttypes.h>
+#include <stdio.h>
+
+void luma_ldRom(char const * const restrict _file,luma_byte const _num,luma_ptr const _addr) {
+	(void)_num;
+	luma_log("Loading bank %" PRIX8 " of ROM file \"%s\" into address space at %" PRIX16 "\n",_num,_file,_addr);
+	FILE * file = fopen(_file,"r");
+	void * const buf = luma_mem + _addr;
+	fread(buf,sizeof (luma_byte),0x4000,file);
+	fclose(file);
 }

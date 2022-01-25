@@ -19,10 +19,8 @@
 
 #include "luma.h"
 
-#include <stdbool.h>
-#include <stdint.h>
-#include <string.h>
+#include <stdio.h>
 
-void luma_initMem(void) {
-	memset(luma_mem,0x0,0x10000);
+void luma_ldBank(luma_byte const _num) {
+	luma_ldRom(luma_cart,_num,_num == 0x0 ? 0x2000 : 0x0);
 }

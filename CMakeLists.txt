@@ -93,14 +93,17 @@ endif()
 add_executable(
 	luma
 	"luma/src/luma_abrt.c"
+	"luma/src/luma_bootlder.c"
 	"luma/src/luma_cart.c"
 	"luma/src/luma_dead.c"
-	"luma/src/luma_initMem.c"
 	"luma/src/luma_instrPtr.c"
-	"luma/src/luma_loadRom.c"
+	"luma/src/luma_ldBank.c"
+	"luma/src/luma_ldBootlder.c"
+	"luma/src/luma_ldRom.c"
 	"luma/src/luma_mem.c"
 	"luma/src/luma_memDump.c"
-	"luma/src/luma_opcd.c"
-	"luma/src/luma_setPtrVal.c"
+	"luma/src/luma_proc.c"
+	"luma/src/luma_setByte.c"
+	"luma/src/luma_setDbl.c"
 	"luma/src/main.c"
 )

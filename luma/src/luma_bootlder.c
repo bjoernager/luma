@@ -19,14 +19,4 @@
 
 #include "luma.h"
 
-#include <stdio.h>
-
-void luma_memDump(void) {
-	fprintf(stderr,"Creating memory dump...");
-	FILE * file = fopen("memdump","w");
-	if (fwrite(luma_mem,sizeof (luma_byte),0x10000,file) < 0x10000) {
-		luma_abrt();
-	}
-	fclose(file);
-	fputs(" done\n",stderr);
-}
+char const * luma_bootlder = "bootloader.luma";

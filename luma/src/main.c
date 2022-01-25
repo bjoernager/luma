@@ -19,17 +19,35 @@
 
 #include "luma.h"
 
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
+static volatile sig_atomic_t luma_hasSig;
+
+static void luma_sigHandl(int const _sig) {
+	(void)_sig;
+	if (luma_hasSig) {
+		exit(EXIT_SUCCESS);
+	}
+	luma_hasSig = 0x1;
+}
 
 int main(void) {
 	printf("luma %i\n",luma_ver);
-	luma_initMem();
-	luma_loadRom("bootloader.luma",0x0);
+	signal(SIGINT,luma_sigHandl);
+	memset(luma_mem,0x0,0x10000); /* We initialise all of the memory to zero so the behaviour is not UB. */
+	luma_ldBootlder();
+	luma_log("\nBootstrapping...\n");
 	while (!luma_dead) {
-		luma_opcd();
+		if (luma_hasSig) {
+			luma_dead = true;
+			break;
+		}
+		luma_proc();
 	}
 #if !defined(NDEBUG)
-	luma_memDump("memdump");
+	luma_memDump();
 #endif
 }

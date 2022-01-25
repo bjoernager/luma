@@ -19,14 +19,8 @@
 
 #include "luma.h"
 
-#include <stdio.h>
-
-void luma_memDump(void) {
-	fprintf(stderr,"Creating memory dump...");
-	FILE * file = fopen("memdump","w");
-	if (fwrite(luma_mem,sizeof (luma_byte),0x10000,file) < 0x10000) {
-		luma_abrt();
+void luma_setByte(luma_ptr const _addr,luma_byte const _val) {
+	if ((_addr >= 0x8000 && _addr <= 0xE808) || (_addr >= 0xF000 && _addr <= 0xFFFF)) { /* Address must be inside VRAM, system RAM, cartridge RAM, any of the registers, or the sound buffer before we can write to it. */
+		luma_mem[_addr] = _val;
 	}
-	fclose(file);
-	fputs(" done\n",stderr);
 }

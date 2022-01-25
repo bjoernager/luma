@@ -19,11 +19,7 @@
 
 #include "luma.h"
 
-#include <stdio.h>
-
-void luma_loadRom(char const * const restrict _file,luma_byte const _banknum) {
-	FILE * file = fopen(_file,"r");
-	void * const buf = luma_mem + (_banknum == 0x0 ? 0x0 : 0x2000);
-	fread(buf,sizeof (luma_byte),0x4000,file);
-	fclose(file);
+void luma_setDbl(luma_ptr const _addr,luma_ptr const _val) {
+	luma_setByte(_addr,(luma_byte)(_val >> 0x8));
+	luma_setByte(_addr,(luma_byte)_val);
 }

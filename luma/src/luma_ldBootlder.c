@@ -19,14 +19,7 @@
 
 #include "luma.h"
 
-#include <stdio.h>
-
-void luma_memDump(void) {
-	fprintf(stderr,"Creating memory dump...");
-	FILE * file = fopen("memdump","w");
-	if (fwrite(luma_mem,sizeof (luma_byte),0x10000,file) < 0x10000) {
-		luma_abrt();
-	}
-	fclose(file);
-	fputs(" done\n",stderr);
+void luma_ldBootlder(void) {
+	luma_log("Loading boot loader \"%s\"\n",luma_bootlder);
+	luma_ldRom(luma_bootlder,0x0,0x0);
 }

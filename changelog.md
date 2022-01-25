@@ -1,3 +1,17 @@
+# 21
+
+* Remove old readme.
+* Update memory model.
+* Fix ROM loader loading ROM into wrong address.
+* Update bootloader.
+* Fix bootloader loaded as bank 0 (should be 1).
+* Add new instructions.
+* Implement more instructions.
+* Rename opcode LDB to BNK.
+* Rewrite instruction interpreter.
+* Writes in ROM no longer succeed.
+* Create SIGINT handler.
+
 # 20
 
 * Move all UTF-8 related code into a seperate project, *u8c*.
