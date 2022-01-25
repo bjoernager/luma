@@ -1,6 +1,13 @@
+# 20
+
+* Move all UTF-8 related code into a seperate project, *u8c*.
+* Rewrite project.
+* Require C99 instead of C17.
+* Reformat the readme into HTML.
+
 # 1↋
 
-* Create *bin* folder in destination directory.
+* Create *bin* folder in destination directory when installing.
 
 # 1↊
 

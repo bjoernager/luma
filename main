@@ -1,5 +1,0 @@
-luma #0
-fn   “main”
-	gæt  “std:print”
-	cɑll “std:print” “Hællo ðære!”
-	æx   #0

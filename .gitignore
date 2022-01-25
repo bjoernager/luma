@@ -1,3 +1,4 @@
-*.o
-/delete_me_pls
-/luma
+/build
+/memdump
+/old
+vgcore.*
