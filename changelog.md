@@ -1,3 +1,12 @@
+# 23
+
+* Implement more instructions.
+* Update project description.
+* Fix UB in signal handler.
+* Require C11 instead of C99.
+* Add more instructions.
+* Remove sound buffer.
+
 # 22
 
 * Fix version number being out of date.

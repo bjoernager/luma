@@ -19,7 +19,7 @@
 
 #include "luma.h"
 
-void luma_setDbl(luma_ptr const _addr,luma_ptr const _val) {
+void luma_setDbl(luma_dbl const _addr,luma_dbl const _val) {
 	luma_setByte(_addr,(luma_byte)(_val >> 0x8));
 	luma_setByte(_addr,(luma_byte)_val);
 }

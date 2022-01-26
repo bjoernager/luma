@@ -19,8 +19,14 @@
 
 #include "luma.h"
 
-void luma_setByte(luma_ptr const _addr,luma_byte const _val) {
+#include <inttypes.h>
+#include <stdio.h>
+
+void luma_setByte(luma_dbl const _addr,luma_byte const _val) {
 	if ((_addr >= 0x8000 && _addr <= 0xE808) || (_addr >= 0xF000 && _addr <= 0xFFFF)) { /* Address must be inside VRAM, system RAM, cartridge RAM, any of the registers, or the sound buffer before we can write to it. */
 		luma_mem[_addr] = _val;
+	}
+	else {
+		fprintf(stderr,"! Attempted to write at read-only address at %" PRIX16 "\n",_addr);
 	}
 }

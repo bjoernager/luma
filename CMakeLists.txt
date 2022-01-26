@@ -7,7 +7,7 @@ project(
 	VERSION
 	24
 	DESCRIPTION
-	"The luma platform."
+	"Reference emulator for the luma platform."
 	HOMEPAGE_URL
 	"https://mandelbrot.dk/luma"
 	LANGUAGES
@@ -15,7 +15,7 @@ project(
 )
 set(
 	CMAKE_C_STANDARD
-	99
+	11
 )
 
 # Disable in-souce builds:

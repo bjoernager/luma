@@ -22,7 +22,7 @@
 #include <inttypes.h>
 #include <stdio.h>
 
-void luma_ldRom(char const * const restrict _file,luma_byte const _num,luma_ptr const _addr) {
+void luma_ldRom(char const * const restrict _file,luma_byte const _num,luma_dbl const _addr) {
 	(void)_num;
 	luma_log("Loading bank %" PRIX8 " of ROM file \"%s\" into address space at %" PRIX16 "\n",_num,_file,_addr);
 	FILE * file = fopen(_file,"r");

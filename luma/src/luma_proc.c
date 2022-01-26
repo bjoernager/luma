@@ -45,6 +45,16 @@
 	 0F : ICD  : ptr        : INCREMENT DOUBLE
 	 10 : DCD  : ptr        : DECREMENT DOUBLE
 	 11 : CPD  : ptr ,ptr   : COMPARE DOUBLE
+	 12 : ADB  : ptr ,ptr   : ADD BYTE
+	 13 : ADD  : ptr ,ptr   : ADD DOUBLE
+	 14 : SUB  : ptr ,ptr   : SUBTRACT
+	 15 : SBD  : ptr ,ptr   : SUBTRACT DOUBLE
+	 16 : MUL  : ptr ,ptr   : MULTIPLY
+	 17 : MLD  : ptr ,ptr   : MULTIPLY DOUBLE
+	 18 : DIV  : ptr ,ptr   : DIVIDE
+	 19 : DVD  : ptr ,ptr   : DIVIDE DOUBLE
+	 1A : OUT  : byte,ptr   : OUTPUT
+	 1B : INP  : byte,ptr   : INPUT
 */
 
 typedef void (* luma_opcdHandlTer)(void);
@@ -334,45 +344,45 @@ void luma_proc() {
 }
 
 static void luma_opcdHandl_ilg(void) {
-	fprintf(stderr,"ILG-%" PRIX8 " @%" PRIX16 "\n",luma_mem[luma_instrPtr],luma_instrPtr);
+	fprintf(stderr,"! ILG-%" PRIX8 " @%" PRIX16 "\n",luma_mem[luma_instrPtr],luma_instrPtr);
 }
 
 static void luma_opcdHandl_ign(void) {}
 
 static void luma_opcdHandl_cpy(void) {
-	luma_ptr const dest = luma_getDbl(luma_instrPtr + 0x1);
-	luma_ptr const src  = luma_getDbl(luma_instrPtr + 0x3);
-	luma_log("CPY %" PRIX16 " %" PRIX16 "\n",src,dest);
+	luma_dbl const dest = luma_getDbl(luma_instrPtr + 0x1);
+	luma_dbl const src  = luma_getDbl(luma_instrPtr + 0x3);
+	luma_log("CPY @%" PRIX16 " %" PRIX16 " %" PRIX16 "\n",luma_instrPtr,src,dest);
 	luma_setByte(dest,luma_mem[src]);
 	luma_instrPtr += 0x4;
 }
 
 static void luma_opcdHandl_set(void) {
-	luma_ptr const  dest = luma_getDbl(luma_instrPtr + 0x1);
+	luma_dbl const  dest = luma_getDbl(luma_instrPtr + 0x1);
 	luma_byte const val  = luma_mem[luma_instrPtr + 0x3];
-	luma_log("SET %" PRIX16 " %" PRIX8 "\n",dest,val);
+	luma_log("SET @%" PRIX16 " %" PRIX16 " %" PRIX8 "\n",luma_instrPtr,dest,val);
 	luma_setByte(dest,val);
 	luma_instrPtr += 0x3;
 }
 
 static void luma_opcdHandl_inc(void) {
-	luma_ptr const addr = luma_getDbl(luma_instrPtr + 0x1);
+	luma_dbl const addr = luma_getDbl(luma_instrPtr + 0x1);
 	luma_log("INC %" PRIX16 "\n",addr);
 	luma_setByte(addr,luma_mem[addr] + 0x1);
 	luma_instrPtr += 0x2;
 }
 
 static void luma_opcdHandl_dec(void) {
-	luma_ptr const addr = luma_getDbl(luma_instrPtr + 0x1);
+	luma_dbl const addr = luma_getDbl(luma_instrPtr + 0x1);
 	luma_log("DEC %" PRIX16 "\n",addr);
 	luma_setByte(addr,luma_mem[addr] - 0x1);
 	luma_instrPtr += 0x2;
 }
 
 static void luma_opcdHandl_jmp(void) {
-	luma_ptr const dest = luma_getDbl(luma_instrPtr + 0x1);
-	luma_log("JMP  %" PRIX16 "\n",dest);
-	luma_instrPtr = dest;
+	luma_dbl const dest = luma_getDbl(luma_instrPtr + 0x1);
+	luma_log("JMP @%" PRIX16 " %" PRIX16 "\n",luma_instrPtr,dest);
+	luma_instrPtr = dest - 0x1; /* Compensate for the incremention by luma_proc. */
 }
 
 static void luma_opcdHandl_die(void) {
@@ -382,6 +392,7 @@ static void luma_opcdHandl_die(void) {
 
 static void luma_opcdHandl_bnk(void) {
 	luma_byte const banknum = luma_mem[luma_instrPtr + 0x1];
+	luma_log("BNK @%" PRIX16 " %" PRIX8 "\n",luma_instrPtr,banknum);
 	luma_ldBank(banknum);
 	luma_instrPtr += 0x1;
 }
@@ -395,7 +406,7 @@ static void luma_opcdHandl_trp(void) {
 static void luma_opcdHandl_cmp(void) {
 	luma_byte const lval = luma_mem[luma_getDbl(luma_instrPtr + 0x1)];
 	luma_byte const rval = luma_mem[luma_getDbl(luma_instrPtr + 0x3)];
-	luma_log("CMP %" PRIX8 " %" PRIX8 ": ",lval,rval);
+	luma_log("CMP @%" PRIX16 " %" PRIX8 " %" PRIX8 ": ",luma_instrPtr,lval,rval);
 	if (lval < rval) {
 		luma_result = 0x0;
 	}
@@ -410,36 +421,79 @@ static void luma_opcdHandl_cmp(void) {
 }
 
 static void luma_opcdHandl_jeq(void) {
-
+	luma_log("JEQ @%" PRIX16 ": ",luma_instrPtr);
+	if (luma_result == 0x1) {
+		luma_dbl const dest = luma_getDbl(luma_instrPtr + 0x1);
+		luma_log("%" PRIX16 "\n",dest);
+		luma_instrPtr = dest - 0x1; /* Compensate for the incremention by luma_proc. */
+	}
+	else {
+		luma_log("%" PRIX16 "\n",luma_instrPtr);
+		luma_instrPtr += 0x2;
+	}
 }
 
 static void luma_opcdHandl_jlt(void) {
-
+	luma_log("JLT @%" PRIX16 ": ",luma_instrPtr);
+	if (luma_result == 0x0) {
+		luma_dbl const dest = luma_getDbl(luma_instrPtr + 0x1);
+		luma_log("%" PRIX16 "\n",dest);
+		luma_instrPtr = dest - 0x1; /* Compensate for the incremention by luma_proc. */
+	}
+	else {
+		luma_log("%" PRIX16 "\n",luma_instrPtr);
+		luma_instrPtr += 0x2;
+	}
 }
 
 static void luma_opcdHandl_jgt(void) {
-
+	luma_log("JGT @%" PRIX16 ": ",luma_instrPtr);
+	if (luma_result == 0x2) {
+		luma_dbl const dest = luma_getDbl(luma_instrPtr + 0x1);
+		luma_log("%" PRIX16 "\n",dest);
+		luma_instrPtr = dest - 0x1; /* Compensate for the incremention by luma_proc. */
+	}
+	else {
+		luma_log("%" PRIX16 "\n",luma_instrPtr);
+		luma_instrPtr += 0x2;
+	}
 }
 
 static void luma_opcdHandl_jle(void) {
-
+	luma_log("JLE @%" PRIX16 ": ",luma_instrPtr);
+	if (luma_result == 0x0 || luma_result == 0x1) {
+		luma_dbl const dest = luma_getDbl(luma_instrPtr + 0x1);
+		luma_log("%" PRIX16 "\n",dest);
+		luma_instrPtr = dest - 0x1; /* Compensate for the incremention by luma_proc. */
+	}
+	else {
+		luma_log("%" PRIX16 "\n",luma_instrPtr);
+		luma_instrPtr += 0x2;
+	}
 }
 
 static void luma_opcdHandl_jge(void) {
-
+	luma_log("JGE @%" PRIX16 ": ",luma_instrPtr);
+	if (luma_result == 0x2 || luma_result == 0x1) {
+		luma_dbl const dest = luma_getDbl(luma_instrPtr + 0x1);
+		luma_log("%" PRIX16 "\n",dest);
+		luma_instrPtr = dest - 0x1; /* Compensate for the incremention by luma_proc. */
+	}
+	else {
+		luma_log("%" PRIX16 "\n",luma_instrPtr);
+		luma_instrPtr += 0x2;
+	}
 }
 
 static void luma_opcdHandl_icd(void) {
-
 }
 
 static void luma_opcdHandl_dcd(void) {
-
 }
 
 static void luma_opcdHandl_cpd(void) {
-	luma_ptr const lval = luma_mem[luma_instrPtr + 0x1];
-	luma_ptr const rval = luma_mem[luma_instrPtr + 0x2];
+	luma_dbl const lval = luma_mem[luma_instrPtr + 0x1];
+	luma_dbl const rval = luma_mem[luma_instrPtr + 0x2];
 	luma_log("CPD %" PRIX16 " %" PRIX16 ": ",lval,rval);
 	if (lval < rval) {
 		luma_result = 0x0;

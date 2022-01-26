@@ -24,15 +24,15 @@
 #include <stdint.h>
 #include <stdio.h>
 
-#define luma_ver 0x1A
+#define luma_ver 0x1B
 
 typedef uint8_t  luma_byte;
-typedef uint16_t luma_ptr;
+typedef uint16_t luma_dbl;
 
 extern char const * luma_bootlder;
 extern char const * luma_cart;
 extern bool         luma_dead;
-extern luma_ptr     luma_instrPtr;
+extern luma_dbl     luma_instrPtr;
 
 extern luma_byte luma_mem[0x10000]; /* 65536-bit address space. */
 
@@ -45,18 +45,19 @@ extern luma_byte luma_mem[0x10000]; /* 65536-bit address space. */
 #define luma_param5 (luma_mem[0xE806])
 #define luma_param6 (luma_mem[0xE807])
 #define luma_param7 (luma_mem[0xE808])
+#define luma_rnd    (luma_mem[0xE809])
 
-#define luma_getDbl(_addr) ((luma_ptr)(luma_mem[_addr] | ((luma_ptr)(luma_mem[_addr + 0x1]) << 0x8)))
+#define luma_getDbl(_addr) ((luma_dbl)(luma_mem[_addr] | ((luma_dbl)(luma_mem[_addr + 0x1]) << 0x8)))
 
 _Noreturn void luma_abrt(      void);
           void luma_initMem(   void);
           void luma_ldBank(    luma_byte    num);
           void luma_ldBootlder(void);
-          void luma_ldRom(     char const * file,luma_byte banknum,luma_ptr addr);
+          void luma_ldRom(     char const * file,luma_byte banknum,luma_dbl addr);
           void luma_memDump(   void);
           void luma_proc(      void);
-          void luma_setByte(   luma_ptr     addr,luma_byte val);
-          void luma_setDbl(    luma_ptr     addr,luma_ptr  val);
+          void luma_setByte(   luma_dbl     addr,luma_byte val);
+          void luma_setDbl(    luma_dbl     addr,luma_dbl  val);
 
 #if defined(NDEBUG)
 #define luma_log(...)

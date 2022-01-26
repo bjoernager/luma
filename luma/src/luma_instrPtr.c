@@ -19,4 +19,4 @@
 
 #include "luma.h"
 
-luma_ptr luma_instrPtr = 0x0;
+luma_dbl luma_instrPtr = 0x0;
