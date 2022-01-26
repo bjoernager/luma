@@ -20,19 +20,25 @@
 #if !defined(luma_hdr_luma)
 #define luma_hdr_luma
 
+#include <SDL2/SDL.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 
-#define luma_ver 0x1B
+#define luma_ver 0x1C
 
 typedef uint8_t  luma_byte;
 typedef uint16_t luma_dbl;
 
-extern char const * luma_bootlder;
-extern char const * luma_cart;
-extern bool         luma_dead;
-extern luma_dbl     luma_instrPtr;
+typedef struct {
+	char const *  bootlder;
+	char const *  cart;
+	bool          dead;
+	luma_dbl      instrPtr;
+	SDL_Surface * srf;
+	SDL_Window *  win;
+} luma_dattyp;
+extern luma_dattyp luma_dat;
 
 extern luma_byte luma_mem[0x10000]; /* 65536-bit address space. */
 
@@ -50,7 +56,10 @@ extern luma_byte luma_mem[0x10000]; /* 65536-bit address space. */
 #define luma_getDbl(_addr) ((luma_dbl)(luma_mem[_addr] | ((luma_dbl)(luma_mem[_addr + 0x1]) << 0x8)))
 
 _Noreturn void luma_abrt(      void);
-          void luma_initMem(   void);
+          bool luma_checkEvts( void);
+          void luma_drwVram(   void);
+          void luma_initDat(   void);
+          bool luma_initWin(   void);
           void luma_ldBank(    luma_byte    num);
           void luma_ldBootlder(void);
           void luma_ldRom(     char const * file,luma_byte banknum,luma_dbl addr);
@@ -59,7 +68,8 @@ _Noreturn void luma_abrt(      void);
           void luma_setByte(   luma_dbl     addr,luma_byte val);
           void luma_setDbl(    luma_dbl     addr,luma_dbl  val);
 
-#if defined(NDEBUG)
+#define luma_noLog true
+#if defined(NDEBUG) || luma_noLog
 #define luma_log(...)
 #else
 #define luma_log(...) (fprintf(stderr,__VA_ARGS__))

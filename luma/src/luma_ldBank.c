@@ -22,5 +22,5 @@
 #include <stdio.h>
 
 void luma_ldBank(luma_byte const _num) {
-	luma_ldRom(luma_cart,_num,_num == 0x0 ? 0x2000 : 0x0);
+	luma_ldRom(luma_dat.cart,_num,_num == 0x0 ? 0x2000 : 0x0);
 }

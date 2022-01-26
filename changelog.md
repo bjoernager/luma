@@ -1,3 +1,17 @@
+# 24
+
+* Depend on SDL2.
+* Remove include directory path.
+* Add new instruction: DRW, CPP, STP.
+* Implement more instruction: DRW, CPP, STP.
+* Fix logger for CPD.
+* Create window for visualising VRAM.
+* Remove speed limiter.
+* Unify all global variables into a struct.
+* Fix luma_setDbl.
+* Improve some loggers.
+* Create new test program.
+
 # 23
 
 * Implement more instructions.

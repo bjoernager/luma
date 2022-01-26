@@ -20,6 +20,6 @@
 #include "luma.h"
 
 void luma_ldBootlder(void) {
-	luma_log("Loading boot loader \"%s\"\n",luma_bootlder);
-	luma_ldRom(luma_bootlder,0x0,0x0);
+	luma_log("Loading boot loader \"%s\"\n",luma_dat.bootlder);
+	luma_ldRom(luma_dat.bootlder,0x0,0x0);
 }

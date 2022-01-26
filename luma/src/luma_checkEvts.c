@@ -19,4 +19,18 @@
 
 #include "luma.h"
 
-char const * luma_bootlder = "bootloader.luma";
+#include <SDL2/SDL.h>
+#include <stdbool.h>
+
+bool luma_checkEvts(void) {
+	SDL_Event evt;
+	while (SDL_PollEvent(&evt)) {
+		switch (evt.type) {
+		default:
+			break;
+		case SDL_QUIT:
+			return true;
+		}
+	}
+	return false;
+}

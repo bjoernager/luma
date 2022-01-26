@@ -19,4 +19,11 @@
 
 #include "luma.h"
 
-luma_dbl luma_instrPtr = 0x0;
+#include <SDL2/SDL.h>
+
+bool luma_initWin(void) {
+	SDL_Init(SDL_INIT_VIDEO);
+	luma_dat.win = SDL_CreateWindow("luma",SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED,0x200,0x200,0x0);
+	luma_dat.srf = SDL_GetWindowSurface(luma_dat.win);
+	return false;
+}

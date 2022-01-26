@@ -19,6 +19,4 @@
 
 #include "luma.h"
 
-#include <stdbool.h>
-
-bool luma_dead = false;
+luma_dattyp luma_dat;

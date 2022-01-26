@@ -19,7 +19,9 @@
 
 #include "luma.h"
 
-void luma_setDbl(luma_dbl const _addr,luma_dbl const _val) {
-	luma_setByte(_addr,(luma_byte)_val);
-	luma_setByte(_addr + 0x1,(luma_byte)(_val >> 0x8));
+void luma_initDat(void) {
+	luma_dat.bootlder = "bootloader.luma";
+	luma_dat.cart     = "cartridge.luma";
+	luma_dat.dead     = false;
+	luma_dat.instrPtr = 0x0;
 }

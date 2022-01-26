@@ -30,10 +30,16 @@ if(
 	)
 endif()
 
+# Dependencies:
+find_package(
+	SDL2
+	REQUIRED
+)
+
 # Include directories:
 include_directories(
 	"${PROJECT_SOURCE_DIR}/include"
-	"/home/delta/repos/u8c/u8c/include"
+	"${SDL2_INCLUDE_DIRS}"
 )
 
 # Enable compiler warnings:
@@ -93,10 +99,11 @@ endif()
 add_executable(
 	luma
 	"luma/src/luma_abrt.c"
-	"luma/src/luma_bootlder.c"
-	"luma/src/luma_cart.c"
-	"luma/src/luma_dead.c"
-	"luma/src/luma_instrPtr.c"
+	"luma/src/luma_checkEvts.c"
+	"luma/src/luma_dat.c"
+	"luma/src/luma_drwVram.c"
+	"luma/src/luma_initDat.c"
+	"luma/src/luma_initWin.c"
 	"luma/src/luma_ldBank.c"
 	"luma/src/luma_ldBootlder.c"
 	"luma/src/luma_ldRom.c"
@@ -106,4 +113,10 @@ add_executable(
 	"luma/src/luma_setByte.c"
 	"luma/src/luma_setDbl.c"
 	"luma/src/main.c"
+)
+
+# Link Libraries:
+target_link_libraries(
+	luma
+	${SDL2_LIBRARIES}
 )
