@@ -25,7 +25,7 @@
 #include <stdint.h>
 #include <stdio.h>
 
-#define luma_ver 0x1C
+#define luma_ver 0x1D
 
 typedef uint8_t  luma_byte;
 typedef uint16_t luma_dbl;
@@ -68,8 +68,7 @@ _Noreturn void luma_abrt(      void);
           void luma_setByte(   luma_dbl     addr,luma_byte val);
           void luma_setDbl(    luma_dbl     addr,luma_dbl  val);
 
-#define luma_noLog true
-#if defined(NDEBUG) || luma_noLog
+#if defined(NDEBUG)
 #define luma_log(...)
 #else
 #define luma_log(...) (fprintf(stderr,__VA_ARGS__))

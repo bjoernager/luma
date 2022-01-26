@@ -1,3 +1,7 @@
+# 25
+
+* Fix logs being forced disabled.
+
 # 24
 
 * Depend on SDL2.
