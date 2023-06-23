@@ -1,4 +1,5 @@
-/build
-/memdump
-/old
+*.agb
 vgcore.*
+/target
+/old
+Cargo.lock

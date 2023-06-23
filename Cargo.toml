@@ -1,0 +1,17 @@
+[package]
+name    = "luma"
+version = "0.30.0"
+edition = "2021"
+
+[[bin]]
+name = "luma"
+path = "src/main.rs"
+
+[profile.dev]
+overflow-checks = false
+
+[profile.release]
+lto = true
+
+[dependencies]
+libc = "0.2.146"

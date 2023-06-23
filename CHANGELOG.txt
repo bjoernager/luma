@@ -1,3 +1,12 @@
+# 0.26
+
+* Repurpose project for emulating the AGB;
+* Make changelog plain-text (rename to CHANGELOG.txt);
+* Write in Rust;
+* Update gitignore;
+* Use Git tagging;
+* Update versioning: major.minor;
+
 # 25
 
 * Fix logs being forced disabled.
