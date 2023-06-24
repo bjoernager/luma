@@ -1,11 +1,11 @@
 // Copyright 2021-2023 Gabriel Jensen.
 
-use crate::luma::{BTLSIZ, IMGSIZ, VER};
+use crate::luma::VER;
 use crate::luma::app::App;
+use crate::luma::emu::Emu;
 
 use std::fs::File;
 use std::io::Read;
-use std::slice;
 
 impl App {
 	pub fn run(&mut self) {
@@ -15,30 +15,24 @@ impl App {
 
 		self.ini();
 
-		{
-			eprintln!("loading booatloader \"{}\"",self.btl);
+		let mut emu = Emu::new();
 
-			// Open bootloader:
-			let mut btl = File::open(self.btl.clone()).expect("unable to open bootloader");
+		eprintln!("loading booatloader \"{}\"",self.btl);
 
-			// Read bootloader:
-			let slc = unsafe { slice::from_raw_parts_mut(self.mem.offset(0x00000000), BTLSIZ) };
-			btl.read(slc).expect("unable to read bootloader");
-		}
+		// Open bootloader:
+		let mut btl = File::open(self.btl.clone()).expect("unable to open bootloader");
 
-		{
-			eprintln!("loading image \"{}\"",self.img);
+		// Read bootloader:
+		btl.read(emu.btl()).expect("unable to read bootloader");
 
-			// Open image:
-			let mut img = File::open(self.img.clone()).expect("unable to open image");
+		eprintln!("loading image \"{}\"",self.img);
 
-			// Read image:
-			let slc = unsafe { slice::from_raw_parts_mut(self.mem.offset(0x08000000), IMGSIZ) };
-			img.read(slc).expect("unable to read image");
-		}
+		// Open image:
+		let mut img = File::open(self.img.clone()).expect("unable to open image");
 
-		self.emu();
+		// Read image:
+		img.read(emu.img()).expect("unable to read image");
 
-		self.end(0x0,None);
+		emu.run();
 	}
 }

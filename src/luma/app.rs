@@ -1,15 +1,17 @@
 // Copyright 2021-2023 Gabriel Jensen.
 
-pub mod emu;
+use std::sync::atomic::AtomicBool;
+
+pub mod drop;
 pub mod end;
 pub mod ini;
 pub mod new;
 pub mod prspar;
 pub mod run;
-pub mod trp;
 
 pub struct App {
 	btl: String,
 	img: String,
-	mem: *mut u8,
 }
+
+pub static mut GOTSIG: AtomicBool = AtomicBool::new(false);
