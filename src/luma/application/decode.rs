@@ -1,9 +1,9 @@
 // Copyright 2021-2023 Gabriel Jensen.
 
-use crate::luma::emulator::{Emulator, TrapKind};
+use crate::luma::application::{Application, TrapKind};
 
-impl Emulator {
-	pub fn opcode(&mut self, opcode: u32) {
+impl Application {
+	pub fn decode(&mut self, opcode: u32) {
 		let condition = match opcode & 0b11110000000000000000000000000 {
 			0b00000000000000000000000000000 => self.psr & 0b01000000000000000000000000000000 != 0x00,
 			0b00010000000000000000000000000 => self.psr & 0b01000000000000000000000000000000 == 0x00,

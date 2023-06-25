@@ -5,6 +5,6 @@ mod luma;
 use crate::luma::application::Application;
 
 fn main() {
-	let mut application = Application::new();
+	let mut application = Application::initialise();
 	application.run();
 }

@@ -1,3 +1,10 @@
+# 0.29
+
+* Update version constant to include minor versions;
+* Use SDL2 for windowing;
+* Combine Application and Emulator structures;
+* Rename opcode method to decode;
+
 # 0.28
 
 * Support bl;

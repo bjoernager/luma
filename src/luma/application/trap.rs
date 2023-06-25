@@ -1,9 +1,9 @@
 // Copyright 2021-2023 Gabriel Jensen.
 
+use crate::luma::application::{Application, TrapKind};
 use crate::luma::MEMORY_SIZE;
-use crate::luma::emulator::{Emulator, TrapKind};
 
-impl Emulator {
+impl Application {
 	pub fn trap(&mut self, kind: TrapKind, address: Option<u32>, opcode: Option<u32>, alignment: Option<u32>) {
 		let message = match kind {
 			TrapKind::BadAlignment  => format!("bad alignment of address 0x{:08X} (should be {}-byte aligned)", address.unwrap(), alignment.unwrap()),
@@ -29,7 +29,7 @@ impl Emulator {
 		eprintln!("\tsp:   {:08X}",  self.registers[0xD]);
 		eprintln!("\tlr:   {:08X}",  self.registers[0xE]);
 		eprintln!("\tpc:   {:08X}",  self.registers[0xF]);
-		eprintln!("\topsr: {:032b}", self.psr);
+		eprintln!("\tcpsr: {:032b}", self.psr);
 
 		panic!("{message}");
 	}

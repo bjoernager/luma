@@ -1,9 +1,9 @@
 // Copyright 2021-2023 Gabriel Jensen.
 
+use crate::luma::application::{Application, TrapKind};
 use crate::luma::MEMORY_SIZE;
-use crate::luma::emulator::{Emulator, TrapKind};
 
-impl Emulator {
+impl Application {
 	#[allow(dead_code)]
 	pub fn read_byte(&mut self, address: u32) -> u8 {
 		if address >= MEMORY_SIZE as u32 { self.trap(TrapKind::OutOfBounds, Some(address), None, None) };

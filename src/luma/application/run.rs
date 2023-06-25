@@ -1,38 +1,42 @@
 // Copyright 2021-2023 Gabriel Jensen.
 
+use crate::luma::application::{Application, GOT_SIGNAL};
 use crate::luma::VERSION;
-use crate::luma::application::Application;
-use crate::luma::emulator::Emulator;
 
-use std::fs::File;
-use std::io::Read;
+use sdl2::event::Event;
+use std::sync::atomic::Ordering;
 
 impl Application {
 	pub fn run(&mut self) {
-		eprintln!("luma {VERSION}");
+		eprintln!("luma {}.{}", VERSION.major, VERSION.minor);
 
 		self.parse_parameters();
+		self.load();
 
-		self.initialise();
+		let mut event_pump = self.sdl.event_pump().expect("unable to get event pump");
 
-		let mut emulator = Emulator::new();
+		eprintln!("starting emulation at 0x{:08X}",self.registers[0xF] - 0x8);
 
-		eprintln!("loading booatloader \"{}\"",self.bootloader);
+		'main_loop: loop {
+			// Check if we have recieved a signal:
+			if unsafe { GOT_SIGNAL.load(Ordering::Relaxed) } {
+				eprintln!("got interrupt");
+				break;
+			}
 
-		// Open bootloader:
-		let mut bootloader = File::open(self.bootloader.clone()).expect("unable to open bootloader");
+			for event in event_pump.poll_iter() {
+				match event {
+					Event::Quit {..} => break 'main_loop,
+					_                => {},
+				}
+			}
 
-		// Read bootloader:
-		bootloader.read(emulator.bootloader()).expect("unable to read bootloader");
+			// Decode opcode:
+			let opcode = self.read_word(self.registers[0xF] - 0x8);
+			self.decode(opcode);
 
-		eprintln!("loading image \"{}\"",self.image);
-
-		// Open image:
-		let mut image = File::open(self.image.clone()).expect("unable to open image");
-
-		// Read image:
-		image.read(emulator.image()).expect("unable to read image");
-
-		emulator.run();
+			// Continue:
+			self.registers[0xF] += 0x4;
+		}
 	}
 }
