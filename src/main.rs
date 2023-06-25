@@ -2,9 +2,9 @@
 
 mod luma;
 
-use crate::luma::app::App;
+use crate::luma::application::Application;
 
 fn main() {
-	let mut app = App::new();
-	app.run();
+	let mut application = Application::new();
+	application.run();
 }

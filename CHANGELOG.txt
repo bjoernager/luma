@@ -1,3 +1,11 @@
+# 0.28
+
+* Support bl;
+* Update register format;
+* Unify trap functions;
+* Add memory read helper functions;
+* Update naming convention;
+
 # 0.27
 
 * Update trap function;
