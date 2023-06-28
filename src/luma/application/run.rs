@@ -1,16 +1,20 @@
 // Copyright 2021-2023 Gabriel Jensen.
 
-use crate::luma::application::{Application, GOT_SIGNAL};
 use crate::luma::VERSION;
+use crate::luma::application::{Application, GOT_SIGNAL};
 
 use sdl2::event::Event;
 use std::sync::atomic::Ordering;
+use std::thread::sleep;
+use std::time::Duration;
 
 impl Application {
 	pub fn run(&mut self) {
+		eprintln!();
 		eprintln!("luma {}.{}", VERSION.major, VERSION.minor);
+		eprintln!("Copyright 2021-2023 Gabriel Jensen.");
+		eprintln!();
 
-		self.parse_parameters();
 		self.load();
 
 		let mut event_pump = self.sdl.event_pump().expect("unable to get event pump");
@@ -24,6 +28,7 @@ impl Application {
 				break;
 			}
 
+			// Iterate over events:
 			for event in event_pump.poll_iter() {
 				match event {
 					Event::Quit {..} => break 'main_loop,
@@ -37,6 +42,9 @@ impl Application {
 
 			// Continue:
 			self.registers[0xF] += 0x4;
+			eprintln!("continue: pc => {:08X}", self.registers[0xF]);
+
+			sleep(Duration::from_secs(0x1));
 		}
 	}
 }

@@ -1,7 +1,7 @@
 // Copyright 2021-2023 Gabriel Jensen.
 
-use crate::luma::application::{Application, TrapKind};
-use crate::luma::MEMORY_SIZE;
+use crate::luma::application::Application;
+use crate::luma::{MEMORY_SIZE, TrapKind};
 
 impl Application {
 	#[allow(dead_code)]

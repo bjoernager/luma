@@ -1,11 +1,19 @@
-# 0.29
+# 0.22
+
+* Survive traps;
+* Use hexadecimal version numbers;
+* Rewrite readme into ASCII-text;
+* Don't default image;
+* Add configuration file;
+
+# 0.21
 
 * Update version constant to include minor versions;
 * Use SDL2 for windowing;
 * Combine Application and Emulator structures;
 * Rename opcode method to decode;
 
-# 0.28
+# 0.20
 
 * Support bl;
 * Update register format;
@@ -13,14 +21,14 @@
 * Add memory read helper functions;
 * Update naming convention;
 
-# 0.27
+# 0.1F
 
 * Update trap function;
 * Add emulator helper structure;
 * Support conditional instructions;
 * Set signal handlers;
 
-# 0.26
+# 0.1E
 
 * Repurpose project for emulating the AGB;
 * Make changelog plain-text (rename to CHANGELOG.txt);
@@ -29,11 +37,11 @@
 * Use Git tagging;
 * Update versioning: major.minor;
 
-# 25
+# 1D
 
 * Fix logs being forced disabled.
 
-# 24
+# 1C
 
 * Depend on SDL2.
 * Remove include directory path.
@@ -47,7 +55,7 @@
 * Improve some loggers.
 * Create new test program.
 
-# 23
+# 1B
 
 * Implement more instructions.
 * Update project description.
@@ -56,11 +64,11 @@
 * Add more instructions.
 * Remove sound buffer.
 
-# 22
+# 1A
 
 * Fix version number being out of date.
 
-# 21
+# 19
 
 * Remove old readme.
 * Update memory model.
@@ -74,37 +82,37 @@
 * Writes in ROM no longer succeed.
 * Create SIGINT handler.
 
-# 20
+# 18
 
 * Move all UTF-8 related code into a seperate project, *u8c*.
 * Rewrite project.
 * Require C99 instead of C17.
 * Reformat the readme into HTML.
 
-# 1↋
+# 17
 
 * Create *bin* folder in destination directory when installing.
 
-# 1↊
+# 16
 
 * Remove memory leaks.
 * Require C17 instead of C2x.
 * Create license notices in source files.
 * Create install and uninstall targets in Makefile.
 
-# 19
+# 15
 
 * Improve Makefile.
 * Improve UTF-8 encoder.
 * Complete UTF-8 decoder.
 * Create basic print function.
 
-# 18
+# 14
 
 * Complete UTF-8 encoder.
 * Fix #1.
 
-# 17
+# 13
 
 * Reformat changelog to Markdown.
 * Completely rework codebase (multiple times, in C, C++, Objective-C and Rust). Finally decide on C.
@@ -115,20 +123,20 @@
 * Create functions for decoding and encoding UTF-8.
 * Don't include entire changelog in commit message.
 
-# 16
+# 12
 
 * Remove build artifacts.
 
-# 15
+# 11
 
 * Compile "luma" instead of "luma.bin".
 * Get input file via arguments passed to executable.
 
-# 14
+# 10
 
 * Reformat README.html to Markdown.
 
-# 13
+# F
 
 * Add "changelog.html" to keep track of changes.
 * Remove deprecated gfx library files.
@@ -139,7 +147,7 @@
 * Begin creation Luma stdlib API.
 * Build "luma.bin" file instead of "luma.elf".
 
-# 12
+# E
 
 * revert .gitignore styling
 * reorganize source code structure in filesystem
@@ -150,14 +158,14 @@
 * unite core functions in class with app data (replaces luma::dat) for easier access (no friends needed, "this->" instead of "luma::dat.")
 * reformat README into HTML (temporary change, will be reformated again in later commit)
 
-# 11
+# D
 
 * create the arch_t and kernel_t types
 * use char const * instead of std::string
 * use custom function instead of std::cerr and std::cout
 * replace as many stdlib function with custom-made ones
 
-# 10
+# C
 
 * redo .gitignore ifle
 * clean up Makefile
@@ -167,12 +175,12 @@
 * remove C relics
 * create semi-working Vulkan test
 
-# ↋
+# B
 
 * readd x support but only for non-linux systems (may change in the future)
 * fix makefile cxxflags
 
-# ↊
+# A
 
 * drop x support
 * move codebase to c++

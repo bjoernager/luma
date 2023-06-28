@@ -1,6 +1,6 @@
 [package]
 name    = "luma"
-version = "0.33.0"
+version = "0.34.0"
 edition = "2021"
 
 [[bin]]
@@ -14,5 +14,6 @@ overflow-checks = false
 lto = true
 
 [dependencies]
-libc = "0.2.146"
-sdl2 = "0.35.2"
+configparser = "3.0.2"
+libc         = "0.2.146"
+sdl2         = "0.35.2"

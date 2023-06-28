@@ -1,7 +1,7 @@
 // Copyright 2021-2023 Gabriel Jensen.
 
-use crate::luma::application::{Application, TrapKind};
-use crate::luma::MEMORY_SIZE;
+use crate::luma::{MEMORY_SIZE, TrapKind};
+use crate::luma::application::Application;
 
 impl Application {
 	pub fn trap(&mut self, kind: TrapKind, address: Option<u32>, opcode: Option<u32>, alignment: Option<u32>) {
@@ -30,7 +30,5 @@ impl Application {
 		eprintln!("\tlr:   {:08X}",  self.registers[0xE]);
 		eprintln!("\tpc:   {:08X}",  self.registers[0xF]);
 		eprintln!("\tcpsr: {:032b}", self.psr);
-
-		panic!("{message}");
 	}
 }

@@ -3,8 +3,11 @@
 mod luma;
 
 use crate::luma::application::Application;
+use crate::luma::configuration::Configuration;
 
 fn main() {
-	let mut application = Application::initialise();
+	let configuration = Configuration::new();
+
+	let mut application = Application::initialise(&configuration);
 	application.run();
 }
