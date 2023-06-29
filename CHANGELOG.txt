@@ -1,3 +1,16 @@
+# 0.24
+
+* Bump dependency versions;
+* Optimise b{cond}{l}.w decoder;
+* Update messages;
+* Remove Application::end method;
+* Add comments;
+* Add function for logging;
+* Use TOML for configuration;
+* Depend on Serde;
+* Update readme;
+* Remove unused Configuration::create;
+
 # 0.23
 
 * Update manifest;

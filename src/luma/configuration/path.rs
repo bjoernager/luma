@@ -9,6 +9,6 @@ impl Configuration {
 		return match var("HOME") {
 			Ok( path) => path,
 			Err(_)    => panic!("unable to get home directory"),
-		} + "/.luma.ini";
+		} + "/.luma.toml";
 	}
 }

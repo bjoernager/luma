@@ -10,9 +10,21 @@ pub struct VersionType<T> {
 
 pub const VERSION: VersionType::<u32> = VersionType::<u32> {
 	major: 0x0,
-	minor: 0x23,
+	minor: 0x24,
 };
 
+#[allow(dead_code)]
+pub enum LogType {
+	Branch(       i32, u32),
+	Continue(     u32),
+	Link(         u32),
+	Load(         u8,  u32),
+	MoveRegister( u8,  u8),
+	MoveImmediate(u8,  u32),
+	Store(        u32, u8),
+}
+
+#[allow(dead_code)]
 pub enum TrapKind {
 	BadAlignment( u32, u32),
 	InvalidOpcode(u32, u32),

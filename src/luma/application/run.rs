@@ -1,6 +1,6 @@
 // Copyright 2021-2023 Gabriel Jensen.
 
-use crate::luma::VERSION;
+use crate::luma::{LogType, VERSION};
 use crate::luma::application::{Application, GOT_SIGNAL};
 
 use sdl2::event::Event;
@@ -19,7 +19,7 @@ impl Application {
 
 		let mut event_pump = self.sdl.event_pump().expect("unable to get event pump");
 
-		eprintln!("starting emulation at 0x{:08X}",self.registers[0xF] - 0x8);
+		eprintln!("starting emulation at {:#010X}",self.registers[0xF] - 0x8);
 
 		'main_loop: loop {
 			// Check if we have recieved a signal:
@@ -42,7 +42,7 @@ impl Application {
 
 			// Continue:
 			self.registers[0xF] += 0x4;
-			eprintln!("continue: pc => {:08X}", self.registers[0xF]);
+			self.log(LogType::Continue(self.registers[0xF]));
 
 			sleep(Duration::from_secs(0x1));
 		}

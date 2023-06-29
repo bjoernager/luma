@@ -37,7 +37,7 @@ impl Application {
 		let memory = unsafe { alloc_zeroed(Layout::new::<[u32; MEMORY_SIZE / size_of::<u32>()]>()) };
 		if memory.is_null() { panic!("unable to allocate memory buffer") }
 
-		eprintln!("allocated memory buffer at 0x{:0X}", memory as usize);
+		eprintln!("allocated memory buffer at {:#0X}", memory as usize);
 
 		return Application {
 			configuration: configuration.clone(),

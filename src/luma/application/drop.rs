@@ -8,8 +8,8 @@ use std::mem::size_of;
 
 impl Drop for Application {
 	fn drop(&mut self) {
-		unsafe { dealloc(self.memory, Layout::new::<[u32; MEMORY_SIZE / size_of::<u32>()]>()) };
+		eprintln!("ending");
 
-		self.end(0x0,None);
+		unsafe { dealloc(self.memory, Layout::new::<[u32; MEMORY_SIZE / size_of::<u32>()]>()) };
 	}
 }
