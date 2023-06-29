@@ -1,3 +1,8 @@
+# 0.23
+
+* Update manifest;
+* Update trap function (make better use of enumerations);
+
 # 0.22
 
 * Survive traps;

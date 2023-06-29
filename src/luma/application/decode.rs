@@ -21,9 +21,9 @@ impl Application {
 			0b11000000000000000000000000000 => self.psr & 0b01000000000000000000000000000000 == 0x00 && self.psr & 0b00010000000000000000000000000000 >> 0x1C == self.psr & 0b10000000000000000000000000000000 >> 0x1F,
 			0b11010000000000000000000000000 => self.psr & 0b01000000000000000000000000000000 != 0x00 || self.psr & 0b00010000000000000000000000000000 >> 0x1C != self.psr & 0b10000000000000000000000000000000 >> 0x1F,
 			0b11100000000000000000000000000 => true,
-			_                               => { self.trap(TrapKind::InvalidOpcode, Some(self.registers[0xF] - 0x8), Some(opcode), None); false },
+			_                               => { self.trap(TrapKind::InvalidOpcode(self.registers[0xF] - 0x8, opcode)); false },
 		};
-		if !condition { return };
+		if !condition { return }
 
 		if opcode & 0b00001110000000000000000000000000 == 0b00001010000000000000000000000000 {
 			let off = opcode          & 0b00000000111111111111111111111111; // Offset from pc.
@@ -39,10 +39,10 @@ impl Application {
 				true  => self.registers[0xF] - inv * 0x4 + 0x8,
 			};
 
-			eprintln!("branch: {:024b} => {:08X}", off, self.registers[0xF] - 0x8);
+			eprintln!("branch: {off:024b} => {:08X}", self.registers[0xF] - 0x8);
 			return;
 		}
 
-		self.trap(TrapKind::InvalidOpcode, Some(self.registers[0xF] - 0x8), Some(opcode), None);
+		self.trap(TrapKind::InvalidOpcode(self.registers[0xF] - 0x8, opcode));
 	}
 }

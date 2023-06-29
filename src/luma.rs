@@ -10,13 +10,13 @@ pub struct VersionType<T> {
 
 pub const VERSION: VersionType::<u32> = VersionType::<u32> {
 	major: 0x0,
-	minor: 0x22,
+	minor: 0x23,
 };
 
 pub enum TrapKind {
-	BadAlignment,
-	InvalidOpcode,
-	OutOfBounds,
+	BadAlignment( u32, u32),
+	InvalidOpcode(u32, u32),
+	OutOfBounds(  u32),
 }
 
 pub const CONFIGURATION_VERSION: u32 = 0x0;

@@ -4,11 +4,11 @@ use crate::luma::{MEMORY_SIZE, TrapKind};
 use crate::luma::application::Application;
 
 impl Application {
-	pub fn trap(&mut self, kind: TrapKind, address: Option<u32>, opcode: Option<u32>, alignment: Option<u32>) {
+	pub fn trap(&mut self, kind: TrapKind) {
 		let message = match kind {
-			TrapKind::BadAlignment  => format!("bad alignment of address 0x{:08X} (should be {}-byte aligned)", address.unwrap(), alignment.unwrap()),
-			TrapKind::InvalidOpcode => format!("invalid opcode 0x{:08X} at 0x{:08X}", opcode.unwrap(), address.unwrap()),
-			TrapKind::OutOfBounds   => format!("out-of-bounds address 0x{:08X} (limit is 0x{MEMORY_SIZE:08X})", address.unwrap()),
+			TrapKind::BadAlignment( address, alignment) => format!("bad alignment of address 0x{address:08X} (should be {alignment}-byte aligned)"),
+			TrapKind::InvalidOpcode(address, opcode)    => format!("invalid opcode 0x{opcode:08X} at 0x{address:08X}"),
+			TrapKind::OutOfBounds(  address)            => format!("out-of-bounds address 0x{address:08X} (limit is 0x{MEMORY_SIZE:08X})"),
 		};
 
 		eprintln!("trap - {message}");

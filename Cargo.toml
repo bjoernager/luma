@@ -1,7 +1,13 @@
 [package]
-name    = "luma"
-version = "0.34.0"
-edition = "2021"
+name        = "luma"
+version     = "0.35.0"
+authors     = ["Gabriel Jensen"]
+edition     = "2021"
+description = "AGB emulator."
+readme      = "README.txt"
+repository  = "https://mandelbrot.dk/luma"
+keywords    = ["agb", "emulator", "gba"]
+categories  = ["emulators"]
 
 [[bin]]
 name = "luma"
