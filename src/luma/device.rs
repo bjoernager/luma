@@ -36,22 +36,26 @@ pub mod read;
 pub mod trap;
 pub mod write;
 
-#[allow(dead_code)]
 pub enum Log {
-	Branch(       i32, u32),
-	Continue(     u32),
-	Link(         u32),
-	Load(         u8,  u32,  u8,  i32, u32),
-	MoveRegister( u8,  u8,   u32),
-	MoveImmediate(u8,  u32),
-	Store(        u32, u8,   u8,  i32, u32),
+	BranchOffset(  i32, u32),
+	BranchRegister(u8,  u32),
+	Continue(      u32),
+	Link(          u32),
+	Load(          u8,  u32,  u8,  i32, u32),
+	MoveRegister(  u8,  u8,   u32),
+	MoveImmediate( u8,  u32),
+	Store(         u32, u8,   u8,  i32, u32),
 }
 
-#[allow(dead_code)]
 pub enum Trap {
 	BadAlignment( u32, u32),
 	InvalidOpcode(u32, u32),
 	OutOfBounds(  u32),
+}
+
+pub enum Branch {
+	Offset(  i32, bool),
+	Register(u8),
 }
 
 pub struct Device {

@@ -21,18 +21,34 @@
 	see <https://www.gnu.org/licenses/>. 
 */
 
-use crate::luma::device::{Device, Log};
+use crate::luma::device::{Branch, Device, Log};
 
 impl Device {
-	pub fn branch(&mut self, offset: i32, l: bool) {
-		if l { // Check the l flag.
-			self.registers[0xE] = self.registers[0xF] - 0x4;
+	pub fn branch(&mut self, kind: Branch) {
+		match kind {
+			Branch::Offset(  offset,   l) => {
+				if l { // Check the l flag.
+					self.registers[0xE] = self.registers[0xF] - 0x4;
+		
+					self.log(Log::Link(self.registers[0xE]));
+				}
+		
+				(self.registers[0xF], _) = self.registers[0xF].overflowing_add_signed(offset + 0x8); // Add extra eight to move to the new fetch instruction.
+		
+				self.log(Log::BranchOffset(offset, self.registers[0xF] - 0x8));
+			},
+			Branch::Register(register) => {
+				let value = self.registers[register as usize];
 
-			self.log(Log::Link(self.registers[0xE]));
+				self.cpsr ^= (value & 0b00000000000000000000000000000001) << 0x5;
+
+				let address = value & 0b11111111111111111111111111111110;
+				self.registers[0xF] = address + 0x8;
+
+				if value & 0b00000000000000000000000000000001 != 0x0 { eprintln!("switching to thumb") }
+
+				self.log(Log::BranchRegister(register, address));
+			},
 		}
-
-		(self.registers[0xF], _) = self.registers[0xF].overflowing_add_signed(offset + 0x8); // Add extra eight to move to the new fetch instruction.
-
-		self.log(Log::Branch(offset, self.registers[0xF] - 0x8));
 	}
 }

@@ -1,3 +1,11 @@
+# 0.26
+
+* Support bx;
+* Fix ldr|str;
+* Remove logging in release builds;
+* Fix version number being in decimal;
+* Update readme;
+
 # 0.25
 
 * Support load and store instructions;

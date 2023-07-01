@@ -21,7 +21,7 @@
 	see <https://www.gnu.org/licenses/>. 
 */
 
-use crate::luma::device::{Device, Trap};
+use crate::luma::device::{Branch, Device, Trap};
 
 impl Device {
 	pub fn decode(&mut self) {
@@ -47,37 +47,7 @@ impl Device {
 		};
 		if !condition { return self.r#continue() }
 
-		// load/store
-		if opcode & 0b00001111001000000000000000000000 == 0b00000101000000000000000000000000 {
-			let register = ((opcode & 0b00000000000000001111000000000000) >> 0xC) as u8;
-
-			let base = ((opcode & 0b00000000000011110000000000000000) >> 0x10) as u8; 
-
-			let immediate = (opcode & 0b00000000000000000000111111111111) as u16;
-
-			let u = 0b00000000100000000000000000000000 != 0x0;
-			let b = 0b00000000010000000000000000000000 != 0x0;
-			let l = 0b00000000000100000000000000000000 != 0x0;
-
-			self.store(register, base, immediate, u, b, l);
-			return self.r#continue();
-		}
-
-		// move
-		if opcode & 0b00001101111111100000111111110000 == 0b00000001101000000000000000000000 {
-			let destination = ((opcode & 0b00000000000000001111000000000000) >> 0xC) as u8;
-			let source      =  (opcode & 0b00000000000000000000000000001111)         as u8;
-
-			let value                            = self.registers[source as usize];
-			self.registers[destination as usize] = value;
-
-			let s = opcode & 0b00000000000100000000000000000000 != 0x0;
-			
-			self.r#move(destination, source, s);
-			return self.r#continue();
-		}
-
-		// branch
+		// b{cond}{l}
 		if opcode & 0b00001110000000000000000000000000 == 0b00001010000000000000000000000000 {
 			let link = opcode & 0b00000001000000000000000000000000 != 0x0;
 			
@@ -91,7 +61,44 @@ impl Device {
 				offset as i32
 			};
 
-			return self.branch(offset, link);
+			return self.branch(Branch::Offset(offset, link));
+		}
+
+		// bx
+		if opcode & 0b00001111111111111111111111110000 == 0b00000001001011111111111100010000 {
+			let register = (opcode & 0b00000000000000000000000000001111) as u8;
+
+			return self.branch(Branch::Register(register));
+		}
+
+		// ldr|str{cond}{b}
+		if opcode & 0b00001111001000000000000000000000 == 0b00000101000000000000000000000000 {
+			let register = ((opcode & 0b00000000000000001111000000000000) >> 0xC) as u8;
+
+			let base = ((opcode & 0b00000000000011110000000000000000) >> 0x10) as u8; 
+
+			let immediate = (opcode & 0b00000000000000000000111111111111) as u16;
+
+			let u = opcode & 0b00000000100000000000000000000000 != 0x0;
+			let b = opcode & 0b00000000010000000000000000000000 != 0x0;
+			let l = opcode & 0b00000000000100000000000000000000 != 0x0;
+
+			self.store(register, base, immediate, u, b, l);
+			return self.r#continue();
+		}
+
+		// mov{cond}{s}
+		if opcode & 0b00001101111111100000111111110000 == 0b00000001101000000000000000000000 {
+			let destination = ((opcode & 0b00000000000000001111000000000000) >> 0xC) as u8;
+			let source      =  (opcode & 0b00000000000000000000000000001111)         as u8;
+
+			let value                            = self.registers[source as usize];
+			self.registers[destination as usize] = value;
+
+			let s = opcode & 0b00000000000100000000000000000000 != 0x0;
+			
+			self.r#move(destination, source, s);
+			return self.r#continue();
 		}
 
 		self.trap(Trap::InvalidOpcode(self.registers[0xF] - 0x8, opcode));

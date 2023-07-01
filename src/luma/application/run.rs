@@ -32,7 +32,7 @@ use std::time::Duration;
 impl Application {
 	pub fn run(&mut self) {
 		eprintln!();
-		eprintln!("luma {}.{}", VERSION.major, VERSION.minor);
+		eprintln!("luma {:X}.{:X}", VERSION.major, VERSION.minor);
 		eprintln!("Copyright 2021-2023 Gabriel Jensen.");
 		eprintln!();
 
@@ -55,7 +55,8 @@ impl Application {
 				}
 			}
 
-			eprintln!("({cycle})");
+			if cfg!(debug_assertions) { eprintln!("({cycle})"); }
+
 			self.device.decode();
 
 			sleep(Duration::from_secs(0x1));

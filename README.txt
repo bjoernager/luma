@@ -47,6 +47,7 @@ Currently, the emulator supports the following ARM instructions only. Others
 will be skipped.
 
  * b{cond}{l}
+ * bx         Rm
  * ldr{cond}  Rn,  +/-offset
  * mov{cond}  Rd,  Rn
  * mov{cons}s r15, Rn
