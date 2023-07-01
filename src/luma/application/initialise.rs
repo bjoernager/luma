@@ -1,15 +1,36 @@
-// Copyright 2021-2023 Gabriel Jensen.
+/*
+	Copyright 2021-2023 Gabriel Jensen.
 
-use crate::luma::{MEMORY_SIZE, SCREEN_HEIGHT, SCREEN_WIDTH};
+	This file is part of Luma.
+
+	Luma is free software: you can redistribute it 
+	and/or modify it under the terms of the GNU 
+	Affero General Public License as published by
+	the Free Software Foundation, either version 3 
+	of the License, or (at your option) any later 
+	version.
+
+	Luma is distributed in the hope that it will be 
+	useful, but WITHOUT ANY WARRANTY; without even 
+	the implied warranty of MERCHANTABILITY or 
+	FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+	Affero General Public License for more details.
+
+	You should have received a copy of the GNU 
+	Affero General Public License along with Luma. If not, 
+	see <https://www.gnu.org/licenses/>. 
+*/
+
+use crate::luma::{SCREEN_HEIGHT, SCREEN_WIDTH};
 use crate::luma::application::{Application, GOT_SIGNAL};
 use crate::luma::configuration::Configuration;
+use crate::luma::device::Device;
 
 extern crate libc;
 extern crate sdl2;
 
 use libc::{c_int, sighandler_t, SIGINT, signal, SIGTERM};
-use std::alloc::{alloc_zeroed, Layout};
-use std::mem::{size_of, transmute};
+use std::mem::transmute;
 use std::sync::atomic::Ordering;
 
 fn signal_handler(sig: c_int) {
@@ -34,36 +55,12 @@ impl Application {
 
 		let window = sdl_video.window("luma", SCREEN_WIDTH as u32 * configuration.scale, SCREEN_HEIGHT as u32 * configuration.scale).position_centered().build().unwrap();
 
-		let memory = unsafe { alloc_zeroed(Layout::new::<[u32; MEMORY_SIZE / size_of::<u32>()]>()) };
-		if memory.is_null() { panic!("unable to allocate memory buffer") }
-
-		eprintln!("allocated memory buffer at {:#0X}", memory as usize);
-
 		return Application {
 			configuration: configuration.clone(),
 			sdl:           sdl,
 			sdl_video:     sdl_video,
 			window:        window,
-			memory:        memory,
-			registers:     [
-				0x00000000,
-				0x00000000,
-				0x00000000,
-				0x00000000,
-				0x00000000,
-				0x00000000,
-				0x00000000,
-				0x00000000,
-				0x00000000,
-				0x00000000,
-				0x00000000,
-				0x00000000,
-				0x00000000,
-				0x00000000,
-				0x00000000,
-				0x08000008,
-			],
-			psr:           0b00000000000000000000000000001111,
+			device:        Device::new(),
 		};
 	}
 }

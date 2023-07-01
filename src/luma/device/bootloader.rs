@@ -21,14 +21,13 @@
 	see <https://www.gnu.org/licenses/>. 
 */
 
-mod luma;
+use crate::luma::device::Device;
+use crate::luma::BOOTLOADER_SIZE;
 
-use crate::luma::application::Application;
-use crate::luma::configuration::Configuration;
+use std::slice;
 
-fn main() {
-	let configuration = Configuration::new();
-
-	let mut application = Application::initialise(&configuration);
-	application.run();
+impl Device {
+	pub fn bootloader<'a>(&mut self) -> &'a mut [u8] {
+		return unsafe { slice::from_raw_parts_mut(self.memory.offset(0x00000000), BOOTLOADER_SIZE) };
+	}
 }

@@ -1,7 +1,29 @@
-// Copyright 2021-2023 Gabriel Jensen.
+/*
+	Copyright 2021-2023 Gabriel Jensen.
+
+	This file is part of Luma.
+
+	Luma is free software: you can redistribute it 
+	and/or modify it under the terms of the GNU 
+	Affero General Public License as published by
+	the Free Software Foundation, either version 3 
+	of the License, or (at your option) any later 
+	version.
+
+	Luma is distributed in the hope that it will be 
+	useful, but WITHOUT ANY WARRANTY; without even 
+	the implied warranty of MERCHANTABILITY or 
+	FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+	Affero General Public License for more details.
+
+	You should have received a copy of the GNU 
+	Affero General Public License along with Luma. If not, 
+	see <https://www.gnu.org/licenses/>. 
+*/
 
 pub mod application;
 pub mod configuration;
+pub mod device;
 
 pub struct VersionType<T> {
 	major: T,
@@ -10,26 +32,8 @@ pub struct VersionType<T> {
 
 pub const VERSION: VersionType::<u32> = VersionType::<u32> {
 	major: 0x0,
-	minor: 0x24,
+	minor: 0x25,
 };
-
-#[allow(dead_code)]
-pub enum LogType {
-	Branch(       i32, u32),
-	Continue(     u32),
-	Link(         u32),
-	Load(         u8,  u32),
-	MoveRegister( u8,  u8),
-	MoveImmediate(u8,  u32),
-	Store(        u32, u8),
-}
-
-#[allow(dead_code)]
-pub enum TrapKind {
-	BadAlignment( u32, u32),
-	InvalidOpcode(u32, u32),
-	OutOfBounds(  u32),
-}
 
 pub const CONFIGURATION_VERSION: u32 = 0x0;
 

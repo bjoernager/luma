@@ -21,14 +21,12 @@
 	see <https://www.gnu.org/licenses/>. 
 */
 
-mod luma;
+use crate::luma::device::{Device, Log};
 
-use crate::luma::application::Application;
-use crate::luma::configuration::Configuration;
+impl Device {
+	pub fn r#continue(&mut self) {
+		self.registers[0xF] += 0x4;
 
-fn main() {
-	let configuration = Configuration::new();
-
-	let mut application = Application::initialise(&configuration);
-	application.run();
+		self.log(Log::Continue(self.registers[0xF]));
+	}
 }

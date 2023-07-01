@@ -1,3 +1,20 @@
+# 0.25
+
+* Support load and store instructions;
+* Update messages;
+* Implement some move instructions;
+* Update log function;
+* Add equivalent write functions;
+* Fix conditional execution;
+* Fix branch;
+* Add device helper structure;
+* Update trap print;
+* Reenable overflow checks;
+* License under AGPL3;
+* Fix default configuration not being made;
+* Update readme;
+* Add spsr registers;
+
 # 0.24
 
 * Bump dependency versions;

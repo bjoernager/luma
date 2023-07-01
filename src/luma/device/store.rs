@@ -21,14 +21,30 @@
 	see <https://www.gnu.org/licenses/>. 
 */
 
-mod luma;
+use crate::luma::device::{Device, Log};
 
-use crate::luma::application::Application;
-use crate::luma::configuration::Configuration;
+impl Device {
+	pub fn store(&mut self, register: u8, base: u8, immediate: u16, u: bool, _b: bool, l: bool) {
+		// TO-DO: Byte loads/stores.
+		
+		let offset = if u {
+			0x0 + immediate as i32
+		} else {
+			0x0 - immediate as i32
+		};
 
-fn main() {
-	let configuration = Configuration::new();
+		let (address, _) = self.registers[base as usize].overflowing_add_signed(offset);
 
-	let mut application = Application::initialise(&configuration);
-	application.run();
+		if l { // Check the l flag.
+			let value = self.read_word(address);
+			self.registers[register as usize] = value;
+
+			self.log(Log::Load(register, address, base, offset, value));
+		} else {
+			let value = self.registers[register as usize];
+			self.write_word(address, value);
+
+			self.log(Log::Store(address, register, base, offset, value));
+		}
+	}
 }

@@ -1,6 +1,6 @@
 [package]
 name        = "luma"
-version     = "0.36.0"
+version     = "0.37.0"
 authors     = ["Gabriel Jensen"]
 edition     = "2021"
 description = "AGB emulator."
@@ -12,9 +12,6 @@ categories  = ["emulators"]
 [[bin]]
 name = "luma"
 path = "src/main.rs"
-
-[profile.dev]
-overflow-checks = false
 
 [profile.release]
 lto = true

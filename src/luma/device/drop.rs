@@ -21,14 +21,14 @@
 	see <https://www.gnu.org/licenses/>. 
 */
 
-mod luma;
+use crate::luma::device::Device;
+use crate::luma::MEMORY_SIZE;
 
-use crate::luma::application::Application;
-use crate::luma::configuration::Configuration;
+use std::alloc::{dealloc, Layout};
+use std::mem::size_of;
 
-fn main() {
-	let configuration = Configuration::new();
-
-	let mut application = Application::initialise(&configuration);
-	application.run();
+impl Drop for Device {
+	fn drop(&mut self) {
+		unsafe { dealloc(self.memory, Layout::new::<[u32; MEMORY_SIZE / size_of::<u32>()]>()) };
+	}
 }

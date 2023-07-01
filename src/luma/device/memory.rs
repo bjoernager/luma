@@ -21,14 +21,10 @@
 	see <https://www.gnu.org/licenses/>. 
 */
 
-mod luma;
+use crate::luma::device::Device;
 
-use crate::luma::application::Application;
-use crate::luma::configuration::Configuration;
-
-fn main() {
-	let configuration = Configuration::new();
-
-	let mut application = Application::initialise(&configuration);
-	application.run();
+impl Device {
+	pub fn memory(&mut self) -> *const u8{
+		return self.memory as *const u8;
+	}
 }

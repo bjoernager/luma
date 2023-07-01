@@ -21,14 +21,18 @@
 	see <https://www.gnu.org/licenses/>. 
 */
 
-mod luma;
+use crate::luma::device::{Device, Log};
 
-use crate::luma::application::Application;
-use crate::luma::configuration::Configuration;
+impl Device {
+	pub fn branch(&mut self, offset: i32, l: bool) {
+		if l { // Check the l flag.
+			self.registers[0xE] = self.registers[0xF] - 0x4;
 
-fn main() {
-	let configuration = Configuration::new();
+			self.log(Log::Link(self.registers[0xE]));
+		}
 
-	let mut application = Application::initialise(&configuration);
-	application.run();
+		(self.registers[0xF], _) = self.registers[0xF].overflowing_add_signed(offset + 0x8); // Add extra eight to move to the new fetch instruction.
+
+		self.log(Log::Branch(offset, self.registers[0xF] - 0x8));
+	}
 }

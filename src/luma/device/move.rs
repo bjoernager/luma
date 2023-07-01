@@ -21,14 +21,21 @@
 	see <https://www.gnu.org/licenses/>. 
 */
 
-mod luma;
+use crate::luma::device::{Device, Log};
 
-use crate::luma::application::Application;
-use crate::luma::configuration::Configuration;
+impl Device {
+	pub fn r#move(&mut self, destination: u8, source: u8, s: bool) {
+		let value                            = self.registers[source as usize];
+		self.registers[destination as usize] = value;
 
-fn main() {
-	let configuration = Configuration::new();
+		if s { // Check the s flag.
+			if destination == 0xF {
+				self.cpsr = self.spsr[(self.cpsr & 0b00000000000000000000000000001111) as usize]; // We ignore the fifth bit, as this is always set.
+			} else {
+				// TO-DO
+			}
+		}
 
-	let mut application = Application::initialise(&configuration);
-	application.run();
+		self.log(Log::MoveRegister(destination, source, value));
+	}
 }
