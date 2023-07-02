@@ -23,34 +23,28 @@
 
 pub mod bootloader;
 pub mod branch;
+pub mod condition;
 pub mod r#continue;
-pub mod decode;
+pub mod decode_arm;
+pub mod decode_thumb;
 pub mod drop;
+pub mod exchange;
 pub mod image;
-pub mod store;
 pub mod log;
 pub mod memory;
 pub mod r#move;
 pub mod new;
 pub mod read;
+pub mod store;
+pub mod thumb;
 pub mod trap;
 pub mod write;
 
-pub enum Log {
-	BranchOffset(  i32, u32),
-	BranchRegister(u8,  u32),
-	Continue(      u32),
-	Link(          u32),
-	Load(          u8,  u32,  u8,  i32, u32),
-	MoveRegister(  u8,  u8,   u32),
-	MoveImmediate( u8,  u32),
-	Store(         u32, u8,   u8,  i32, u32),
-}
-
 pub enum Trap {
-	BadAlignment( u32, u32),
-	InvalidOpcode(u32, u32),
-	OutOfBounds(  u32),
+	BadAlignment(      u32, u32),
+	InvalidArmOpcode(  u32, u32),
+	InvalidThumbOpcode(u32, u16),
+	OutOfBounds(       u32),
 }
 
 pub enum Branch {
@@ -59,6 +53,8 @@ pub enum Branch {
 }
 
 pub struct Device {
+	pub decode:    fn(&mut Device),
+	
 	memory:    *mut u8,
 	registers: [u32; 0x10],
 	cpsr:      u32,

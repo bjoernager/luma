@@ -21,34 +21,17 @@
 	see <https://www.gnu.org/licenses/>. 
 */
 
-use crate::luma::device::{Device, Log};
+use crate::luma::device::Device;
 
 impl Device {
-	pub fn log(&mut self, kind: Log) {
+	pub fn log(&mut self, keyword: &str, message: String) {
 		if cfg!(debug_assertions) { // This optimises the function away.
-			let kind_string = match kind {
-				Log::BranchOffset(  ..) => "branch  ",
-				Log::BranchRegister(..) => "branch  ",
-				Log::Continue(      ..) => "continue",
-				Log::Link(          ..) => "link    ",
-				Log::Load(          ..) => "load    ",
-				Log::MoveRegister(  ..) => "move    ",
-				Log::MoveImmediate( ..) => "move    ",
-				Log::Store(         ..) => "store   ",
-			};
+			let padding: usize = 0x8;
 
-			let message = match kind {
-				Log::BranchOffset(  offset,      address)                        => format!("r15{offset:+} => {address:#010X}"),
-				Log::BranchRegister(register,    address)                        => format!("r15 => r{register} ({address:#08X})"),
-				Log::Continue(      address)                                     => format!("r15 => {address:#010X}"),
-				Log::Link(          address)                                     => format!("r14 => {address:#010X}"),
-				Log::Load(          register,    address,   base, offset, value) => format!("r{register} => r{base}{offset:+}={address:#010X} ({value:#010X})"),
-				Log::MoveRegister(  destination, source,    value)               => format!("r{destination} => r{source} ({value:#010X})"),
-				Log::MoveImmediate( register,    immediate)                      => format!("r{register} => {immediate:#X}"),
-				Log::Store(         address,     register,  base, offset, value) => format!("r{base}{offset:+}={address:#010X} => r{register} ({value:#010X})"),
-			};
+			assert!(keyword.len() <= padding);
+			let keyword = keyword.to_string() + &" ".to_string().repeat(padding - keyword.len());
 
-			eprintln!("{kind_string} : {message}");
+			eprintln!("{keyword} : {message}");
 		}
 	}
 }

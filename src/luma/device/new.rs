@@ -40,6 +40,7 @@ impl Device {
 		eprintln!("starting emulation at {start:#08X}");
 
 		return Device {
+			decode:        Device::decode_arm,
 			memory:        memory,
 			registers:     [
 				0x00000000,

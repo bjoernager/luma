@@ -27,9 +27,10 @@ use crate::luma::device::{Device, Trap};
 impl Device {
 	pub fn trap(&mut self, kind: Trap) {
 		let message = match kind {
-			Trap::BadAlignment( address, alignment) => format!("bad alignment of address {address:#010X} (should be {alignment}-byte aligned)"),
-			Trap::InvalidOpcode(address, opcode)    => format!("invalid opcode {opcode:#034b} at {address:#010X}"),
-			Trap::OutOfBounds(  address)            => format!("out-of-bounds address {address:#010X} (limit is {MEMORY_SIZE:#010X})"),
+			Trap::BadAlignment(      address, alignment) => format!("bad alignment of address {address:#010X} (should be {alignment}-byte aligned)"),
+			Trap::InvalidArmOpcode(  address, opcode)    => format!("invalid opcode {opcode:#034b} at {address:#010X}"),
+			Trap::InvalidThumbOpcode(address, opcode)    => format!("invalid opcode {opcode:#018b} at {address:#010X}"),
+			Trap::OutOfBounds(       address)            => format!("out-of-bounds address {address:#010X} (limit is {MEMORY_SIZE:#010X})"),
 		};
 
 		eprintln!("{message}");
@@ -55,5 +56,11 @@ impl Device {
 		eprintln!("  spsr_svc: {:#034b}", self.spsr[0x3]);
 		eprintln!("  spsr_abt: {:#034b}", self.spsr[0x7]);
 		eprintln!("  spsr_und: {:#034b}", self.spsr[0xB]);
+
+		match kind {
+			Trap::BadAlignment(..) => panic!("bad alignment of address"),
+			Trap::OutOfBounds( ..) => panic!("out-of-bounds address"),
+			_                      => {},
+		}
 	}
 }

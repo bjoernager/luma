@@ -21,12 +21,18 @@
 	see <https://www.gnu.org/licenses/>. 
 */
 
-use crate::luma::device::{Device, Log};
+use crate::luma::device::Device;
 
 impl Device {
 	pub fn r#continue(&mut self) {
-		self.registers[0xF] += 0x4;
+		let offset = if self.thumb() {
+			0x2
+		} else {
+			0x4
+		};
 
-		self.log(Log::Continue(self.registers[0xF]));
+		self.registers[0xF] += offset;
+
+		self.log("continue", format!("r15 => r15{offset:+}={:#010X}", self.registers[0xF]));
 	}
 }

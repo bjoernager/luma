@@ -46,17 +46,23 @@ These settings are overwritten by terminal parameters (see USAGE).
 Currently, the emulator supports the following ARM instructions only. Others 
 will be skipped.
 
- * b{cond}{l}
+ * b{cond}{l} +/-offset_24
  * bx         Rm
- * ldr{cond}  Rn,  +/-offset
+ * ldr{cond}  Rn,  +/-offset_12
  * mov{cond}  Rd,  Rn
  * mov{cons}s r15, Rn
- * str{cond}  Rn,  +/-offset
+ * str{cond}  Rn,  +/-offset_12
+
+Moreover, the following Thumb instructions are supported:
+
+ * b          +/-offset_11
+ * b{cond}    +/-offset_8
+ * bx         Rm
 
 When the virtual processor boots, the default mode is the sys mode. As no 
 supported instruction can change this mode, this is also the only mode for now.
 
-The entire memory space (0x00000000 to 0x0E010000, inclusive) is available, 
+The entire memory space (0x00000000 to 0x0E010000, exclusive) is available, 
 however, no I/O-mapped addresses are currently functional.
 
 Improved support is, of course, planned.

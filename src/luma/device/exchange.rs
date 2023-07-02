@@ -21,14 +21,17 @@
 	see <https://www.gnu.org/licenses/>. 
 */
 
-use crate::luma::MEMORY_SIZE;
 use crate::luma::device::Device;
 
-use std::slice;
-
 impl Device {
-	#[allow(dead_code)]
-	pub fn memory<'a>(&mut self) -> &'a mut [u8] {
-		return unsafe { slice::from_raw_parts_mut(self.memory.offset(0x00000000), MEMORY_SIZE) };
+	pub fn exchange(&mut self, thumb: bool) {
+		let decoders = [
+			Device::decode_arm,
+			Device::decode_thumb,
+		];
+
+		self.decode = decoders[thumb as usize];
+
+		self.log("exchange", format!("T => {thumb}"));
 	}
 }

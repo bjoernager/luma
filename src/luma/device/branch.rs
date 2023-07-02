@@ -21,33 +21,64 @@
 	see <https://www.gnu.org/licenses/>. 
 */
 
-use crate::luma::device::{Branch, Device, Log};
+use crate::luma::device::{Branch, Device};
 
 impl Device {
 	pub fn branch(&mut self, kind: Branch) {
 		match kind {
-			Branch::Offset(  offset,   l) => {
+			Branch::Offset(offset, l) => {
 				if l { // Check the l flag.
-					self.registers[0xE] = self.registers[0xF] - 0x4;
+					// Store the address of the following instruction 
+					// in r14 (lr).
+
+					let pc_offset: u32 = match self.thumb() {
+						false => 0x4,
+						true  => 0x2,
+					};
+
+					self.registers[0xE] = self.registers[0xF] - pc_offset;
 		
-					self.log(Log::Link(self.registers[0xE]));
+					self.log("link", format!("r14 => r15-{pc_offset}={:#010X}", self.registers[0xE]));
 				}
-		
-				(self.registers[0xF], _) = self.registers[0xF].overflowing_add_signed(offset + 0x8); // Add extra eight to move to the new fetch instruction.
-		
-				self.log(Log::BranchOffset(offset, self.registers[0xF] - 0x8));
+
+				// Add the offset to r15 (pc).
+
+				let (address, _) = self.registers[0xF].overflowing_add_signed(offset);
+	
+				// Add extra offset to move to the new fetch 
+				// instruction.
+				let pc_offset = match self.thumb() {
+					false => 0x8,
+					true  => 0x4,
+				};
+
+				self.registers[0xF] = address + pc_offset;
+				
+				self.log("branch", format!("r15 => r15{offset:+}+{pc_offset} ({:#010X})", self.registers[0xF]));
 			},
 			Branch::Register(register) => {
+				// Use the address stored in 'register' as the new 
+				// value in r15 (pc).
+
 				let value = self.registers[register as usize];
 
-				self.cpsr ^= (value & 0b00000000000000000000000000000001) << 0x5;
+				let t = value & 0b00000000000000000000000000000001 != 0x0;
+
+				self.cpsr = self.cpsr & 0b11111111111111111111111111011111 | (t as u32) << 0x5;
+				self.exchange(t);
 
 				let address = value & 0b11111111111111111111111111111110;
-				self.registers[0xF] = address + 0x8;
 
-				if value & 0b00000000000000000000000000000001 != 0x0 { eprintln!("switching to thumb") }
+				// Add extra offset to move to the new fetch 
+				// instruction.
+				let pc_offset: u32 = match t {
+					false => 0x8,
+					true  => 0x4,
+				};
 
-				self.log(Log::BranchRegister(register, address));
+				self.registers[0xF] = address + pc_offset;
+
+				self.log("branch", format!("r15 => r{register}{pc_offset:+} ({:#010X})", self.registers[0xF]));
 			},
 		}
 	}

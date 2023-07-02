@@ -21,7 +21,7 @@
 	see <https://www.gnu.org/licenses/>. 
 */
 
-use crate::luma::device::{Device, Log};
+use crate::luma::device::Device;
 
 impl Device {
 	pub fn r#move(&mut self, destination: u8, source: u8, s: bool) {
@@ -36,6 +36,6 @@ impl Device {
 			}
 		}
 
-		self.log(Log::MoveRegister(destination, source, value));
+		self.log("move", format!("r{destination} => r{source} ({value:#010X})"));
 	}
 }

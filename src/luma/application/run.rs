@@ -57,7 +57,7 @@ impl Application {
 
 			if cfg!(debug_assertions) { eprintln!("({cycle})"); }
 
-			self.device.decode();
+			(self.device.decode)(&mut self.device);
 
 			sleep(Duration::from_secs(0x1));
 		}

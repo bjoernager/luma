@@ -21,14 +21,10 @@
 	see <https://www.gnu.org/licenses/>. 
 */
 
-use crate::luma::MEMORY_SIZE;
 use crate::luma::device::Device;
 
-use std::slice;
-
 impl Device {
-	#[allow(dead_code)]
-	pub fn memory<'a>(&mut self) -> &'a mut [u8] {
-		return unsafe { slice::from_raw_parts_mut(self.memory.offset(0x00000000), MEMORY_SIZE) };
+	pub fn thumb(&self) -> bool {
+		return self.cpsr & 0b00000000000000000000000000100000 != 0x0;
 	}
 }
