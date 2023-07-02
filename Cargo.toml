@@ -1,6 +1,6 @@
 [package]
 name        = "luma"
-version     = "0.40.0"
+version     = "0.41.0"
 authors     = ["Gabriel Jensen"]
 edition     = "2021"
 description = "AGB emulator."

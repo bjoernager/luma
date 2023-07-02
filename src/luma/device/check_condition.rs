@@ -24,7 +24,7 @@
 use crate::luma::device::Device;
 
 impl Device {
-	pub fn condition(&self, condition: u8) -> bool {
+	pub fn check_condition(&self, condition: u8) -> bool {
 		return match condition {
 			0x0 => self.cpsr & 0b01000000000000000000000000000000 != 0x00,
 			0x1 => self.cpsr & 0b01000000000000000000000000000000 == 0x00,

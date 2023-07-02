@@ -21,7 +21,7 @@
 	see <https://www.gnu.org/licenses/>. 
 */
 
-use crate::luma::device::{Branch, Device, Trap};
+use crate::luma::device::{Branch, Device, Move, Trap};
 
 impl Device {
 	pub fn decode_thumb(&mut self) {
@@ -67,6 +67,36 @@ impl Device {
 			let register = ((opcode & 0b0000000001111000) >> 0x3) as u8;
 
 			return self.branch(Branch::Register(register));
+		}
+
+		// mov Rd, Rm
+		if opcode & 0b1111111100000000 == 0b0100011000000000 {
+			let destination = ((opcode & 0b0000000000000111) | (opcode & 0b0000000010000000) >> 0x4) as u8;
+
+			let source = ((opcode & 0b0000000001111000) >> 0x3) as u8;
+
+			self.r#move(destination, Move::Register(source), false);
+			return self.r#continue();
+		}
+
+		// movs Rd, immediate_8
+		if opcode & 0b1111100000000000 == 0b0010000000000000 {
+			let destination = ((opcode & 0b0000011100000000) >> 0x8) as u8;
+
+			let immediate = (opcode & 0b0000000011111111) as u8;
+
+			self.r#move(destination, Move::Immediate(immediate), true);
+			return self.r#continue();
+		}
+
+		// movs Rd, Rn
+		if opcode & 0b1111111111000000 == 0b0001110000000000 {
+			let destination = ((opcode & 0b0000000000000111) >> 0x3) as u8;
+
+			let source = ((opcode & 0b0000000000111000) >> 0x3) as u8;
+
+			self.r#move(destination, Move::Register(source), true);
+			return self.r#continue();
 		}
 
 		self.trap(Trap::InvalidThumbOpcode(address, opcode));

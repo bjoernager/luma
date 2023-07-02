@@ -23,7 +23,7 @@
 
 pub mod bootloader;
 pub mod branch;
-pub mod condition;
+pub mod check_condition;
 pub mod r#continue;
 pub mod decode_arm;
 pub mod decode_thumb;
@@ -50,6 +50,11 @@ pub enum Trap {
 pub enum Branch {
 	Offset(  i32, bool),
 	Register(u8),
+}
+
+pub enum Move {
+	Immediate(u8),
+	Register( u8),
 }
 
 pub struct Device {

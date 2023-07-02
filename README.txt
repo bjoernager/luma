@@ -51,6 +51,7 @@ will be skipped.
  * bx         Rm
  * ldr{cond}  Rn,  +/-offset_12
  * mov{cond}  Rd,  Rn
+ * mov{cond}  Rd,  immediate_8
  * mov{cons}s r15, Rn
  * str{cond}  Rn,  +/-offset_12
 
@@ -59,6 +60,9 @@ Moreover, the following Thumb instructions are supported:
  * b          +/-offset_11
  * b{cond}    +/-offset_8
  * bx         Rm
+ * mov        Rd,  Rn
+ * movs       Rd,  immediate_8
+ * movs       Rd,  Rn
 
 When the virtual processor boots, the default mode is the sys mode. As no 
 supported instruction can change this mode, this is also the only mode for now.

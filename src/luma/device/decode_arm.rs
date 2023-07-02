@@ -21,7 +21,7 @@
 	see <https://www.gnu.org/licenses/>. 
 */
 
-use crate::luma::device::{Branch, Device, Trap};
+use crate::luma::device::{Branch, Device, Move, Trap};
 
 impl Device {
 	pub fn decode_arm(&mut self) {
@@ -33,9 +33,9 @@ impl Device {
 		if cfg!(debug_assertions) { eprintln!("{opcode:#034b} @ {address:#010X}") }
 
 		let condition = ((opcode & 0b11110000000000000000000000000000) >> 0x1C) as u8;
-		if !self.condition(condition) { return self.r#continue() }
+		if !self.check_condition(condition) { return self.r#continue() }
 
-		// b{cond}{l}
+		// b{cond}{l} +/-offset_24
 		if opcode & 0b00001110000000000000000000000000 == 0b00001010000000000000000000000000 {
 			let link = opcode & 0b00000001000000000000000000000000 != 0x0;
 			
@@ -52,14 +52,14 @@ impl Device {
 			return self.branch(Branch::Offset(offset, link));
 		}
 
-		// bx
+		// bx{cond} Rm
 		if opcode & 0b00001111111111111111111111110000 == 0b00000001001011111111111100010000 {
 			let register = (opcode & 0b00000000000000000000000000001111) as u8;
 
 			return self.branch(Branch::Register(register));
 		}
 
-		// ldr|str{cond}{b}
+		// ldr|str{cond}{b} Rn, +/-offset_12
 		if opcode & 0b00001111001000000000000000000000 == 0b00000101000000000000000000000000 {
 			let register = ((opcode & 0b00000000000000001111000000000000) >> 0xC) as u8;
 
@@ -75,7 +75,7 @@ impl Device {
 			return self.r#continue();
 		}
 
-		// mov{cond}{s}
+		// mov{cond}{s} Rd, Rn
 		if opcode & 0b00001101111111100000111111110000 == 0b00000001101000000000000000000000 {
 			let destination = ((opcode & 0b00000000000000001111000000000000) >> 0xC) as u8;
 			let source      =  (opcode & 0b00000000000000000000000000001111)         as u8;
@@ -85,7 +85,7 @@ impl Device {
 
 			let s = opcode & 0b00000000000100000000000000000000 != 0x0;
 			
-			self.r#move(destination, source, s);
+			self.r#move(destination, Move::Register(source), s);
 			return self.r#continue();
 		}
 

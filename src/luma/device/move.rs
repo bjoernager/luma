@@ -21,11 +21,15 @@
 	see <https://www.gnu.org/licenses/>. 
 */
 
-use crate::luma::device::Device;
+use crate::luma::device::{Device, Move};
 
 impl Device {
-	pub fn r#move(&mut self, destination: u8, source: u8, s: bool) {
-		let value                            = self.registers[source as usize];
+	pub fn r#move(&mut self, destination: u8, kind: Move, s: bool) {
+		let value = match kind {
+			Move::Immediate(immediate) => immediate as u32,
+			Move::Register( source)    => self.registers[source as usize],
+		};
+
 		self.registers[destination as usize] = value;
 
 		if s { // Check the s flag.
@@ -36,6 +40,9 @@ impl Device {
 			}
 		}
 
-		self.log("move", format!("r{destination} => r{source} ({value:#010X})"));
+		self.log("move", match kind {
+			Move::Immediate(..)     => format!("r{destination} => {value:#04X}"),
+			Move::Register( source) => format!("r{destination} => r{source} ({value:#010X})"),
+		});
 	}
 }
