@@ -21,14 +21,24 @@
 	If not, see <https://www.gnu.org/licenses/>.
 */
 
-use crate::luma::MEMORY_SIZE;
-use crate::luma::device::Device;
-
-use std::slice;
+use crate::luma::device::{Device, Log};
 
 impl Device {
-	#[allow(dead_code)]
-	pub fn memory<'a>(&mut self) -> &'a mut [u8] {
-		return unsafe { slice::from_raw_parts_mut(self.memory.offset(0x00000000), MEMORY_SIZE) };
+	pub fn interrupt(&mut self, immediate: u32) {
+		self.log(Log::Interrupt, format!("{immediate:#010X}"));
+
+		self.spsr[0b0011] = self.cpsr;
+		self.log(Log::Interrupt, format!("spsr_svc => cpsr ({:#034b})", self.spsr[0b0011]));
+
+		// Enter svc mode.
+		// Enter ARM state.
+		// Disable IRQ exceptions.
+		self.cpsr = self.cpsr & 0b11111111111111111111111101000000 | 0b00000000000000000000000010010011;
+		self.log(Log::Interrupt, format!("cpsr => {:#034b}", self.cpsr));
+
+		self.exchange(false);
+
+		self.registers[0xF] = 0x00000008;
+		self.log(Log::Interrupt, format!("pc => {:#010X}", self.registers[0xF]));
 	}
 }

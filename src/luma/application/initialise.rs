@@ -3,25 +3,25 @@
 
 	This file is part of Luma.
 
-	Luma is free software: you can redistribute it 
-	and/or modify it under the terms of the GNU 
+	Luma is free software: you can redistribute it
+	and/or modify it under the terms of the GNU
 	Affero General Public License as published by
-	the Free Software Foundation, either version 3 
-	of the License, or (at your option) any later 
+	the Free Software Foundation, either version 3
+	of the License, or (at your option) any later
 	version.
 
-	Luma is distributed in the hope that it will be 
-	useful, but WITHOUT ANY WARRANTY; without even 
-	the implied warranty of MERCHANTABILITY or 
-	FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+	Luma is distributed in the hope that it will be
+	useful, but WITHOUT ANY WARRANTY; without even
+	the implied warranty of MERCHANTABILITY or
+	FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 	Affero General Public License for more details.
 
-	You should have received a copy of the GNU 
-	Affero General Public License along with Luma. If not, 
-	see <https://www.gnu.org/licenses/>. 
+	You should have received a copy of the GNU
+	Affero General Public License along with Luma.
+	If not, see <https://www.gnu.org/licenses/>.
 */
 
-use crate::luma::{SCREEN_HEIGHT, SCREEN_WIDTH};
+use crate::luma::{SCREEN_SIZE};
 use crate::luma::application::{Application, GOT_SIGNAL};
 use crate::luma::configuration::Configuration;
 use crate::luma::device::Device;
@@ -53,7 +53,7 @@ impl Application {
 		let sdl       = sdl2::init().expect("unable to initialise sdl2");
 		let sdl_video = sdl.video().expect("unable to initialise sdl2");
 
-		let window = sdl_video.window("luma", SCREEN_WIDTH as u32 * configuration.scale, SCREEN_HEIGHT as u32 * configuration.scale).position_centered().build().unwrap();
+		let window = sdl_video.window("luma", SCREEN_SIZE.width as u32 * configuration.scale, SCREEN_SIZE.height as u32 * configuration.scale).position_centered().build().unwrap();
 
 		return Application {
 			configuration: configuration.clone(),

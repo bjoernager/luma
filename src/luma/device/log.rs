@@ -3,33 +3,42 @@
 
 	This file is part of Luma.
 
-	Luma is free software: you can redistribute it 
-	and/or modify it under the terms of the GNU 
+	Luma is free software: you can redistribute it
+	and/or modify it under the terms of the GNU
 	Affero General Public License as published by
-	the Free Software Foundation, either version 3 
-	of the License, or (at your option) any later 
+	the Free Software Foundation, either version 3
+	of the License, or (at your option) any later
 	version.
 
-	Luma is distributed in the hope that it will be 
-	useful, but WITHOUT ANY WARRANTY; without even 
-	the implied warranty of MERCHANTABILITY or 
-	FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+	Luma is distributed in the hope that it will be
+	useful, but WITHOUT ANY WARRANTY; without even
+	the implied warranty of MERCHANTABILITY or
+	FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 	Affero General Public License for more details.
 
-	You should have received a copy of the GNU 
-	Affero General Public License along with Luma. If not, 
-	see <https://www.gnu.org/licenses/>. 
+	You should have received a copy of the GNU
+	Affero General Public License along with Luma.
+	If not, see <https://www.gnu.org/licenses/>.
 */
 
-use crate::luma::device::Device;
+use crate::luma::device::{Device, Log};
 
 impl Device {
-	pub fn log(&mut self, keyword: &str, message: String) {
+	pub fn log(&mut self, kind: Log, message: String) {
 		if cfg!(debug_assertions) { // This optimises the function away.
-			let padding: usize = 0x8;
-
-			assert!(keyword.len() <= padding);
-			let keyword = keyword.to_string() + &" ".to_string().repeat(padding - keyword.len());
+			let keyword = match kind {
+				Log::Branch    => "branch   ",
+				Log::Continue  => "continue ",
+				Log::Exchange  => "exchange ",
+				Log::Interrupt => "interrupt",
+				Log::Link      => "link     ",
+				Log::Load      => "load     ",
+				Log::Move      => "move     ",
+				Log::Pop       => "pop      ",
+				Log::Push      => "push     ",
+				Log::Shift     => "shift    ",
+				Log::Store     => "store    ",
+			};
 
 			eprintln!("{keyword} : {message}");
 		}

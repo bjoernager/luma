@@ -21,14 +21,24 @@
 	If not, see <https://www.gnu.org/licenses/>.
 */
 
-use crate::luma::MEMORY_SIZE;
-use crate::luma::device::Device;
-
-use std::slice;
+use crate::luma::device::{Device, Log};
 
 impl Device {
-	#[allow(dead_code)]
-	pub fn memory<'a>(&mut self) -> &'a mut [u8] {
-		return unsafe { slice::from_raw_parts_mut(self.memory.offset(0x00000000), MEMORY_SIZE) };
+	pub fn arm_link(&mut self) {
+		// Store the address of the following instruction
+		// in the link register.
+
+		(self.registers[0xE], _) = self.registers[0xF].overflowing_sub(0x4);
+
+		self.log(Log::Link, format!("lr => pc-4 ({:#010X})", self.registers[0xE]));
+	}
+
+	pub fn thumb_link(&mut self) {
+		// Store the address of the following instruction
+		// in the link register.
+
+		(self.registers[0xE], _) = self.registers[0xF].overflowing_sub(0x2);
+
+		self.log(Log::Link, format!("lr => pc ({:#010X})", self.registers[0xE]));
 	}
 }

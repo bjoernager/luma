@@ -24,21 +24,27 @@
 use crate::luma::device::{Device, Log};
 
 impl Device {
-	pub fn arm_continue(&mut self) {
-		// Increment the program counter by one
-		// instruction.
+	pub fn thumb_shift_left(&mut self, destination: u8, source: u8, immediate: u8) {
+		let source_value = self.registers[source as usize];
 
-		(self.registers[0xF], _) = self.registers[0xF].overflowing_add(0x4);
+		let (value, _) = source_value.overflowing_shl(immediate as u32);
 
-		self.log(Log::Continue, format!("pc => pc+4={:#010X}", self.registers[0xF]));
+		self.registers[destination as usize] = value;
+
+		// TO-DO: Set condition flags.
+
+		self.log(Log::Shift, format!("r{destination} => r{source} << {immediate} ({value:#010X})"));
 	}
 
-	pub fn thumb_continue(&mut self) {
-		// Increment the program counter by one
-		// instruction.
+	pub fn thumb_shift_right(&mut self, destination: u8, source: u8, immediate: u8) {
+		let source_value = self.registers[source as usize];
 
-		(self.registers[0xF], _) = self.registers[0xF].overflowing_add(0x2);
+		let (value, _) = source_value.overflowing_shr(immediate as u32);
 
-		self.log(Log::Continue, format!("pc => pc+2={:#010X}", self.registers[0xF]));
+		self.registers[destination as usize] = value;
+
+		// TO-DO: Set condition flags.
+
+		self.log(Log::Shift, format!("r{destination} => r{source} << {immediate} ({value:#010X})"));
 	}
 }

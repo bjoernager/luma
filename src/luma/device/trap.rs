@@ -3,22 +3,22 @@
 
 	This file is part of Luma.
 
-	Luma is free software: you can redistribute it 
-	and/or modify it under the terms of the GNU 
+	Luma is free software: you can redistribute it
+	and/or modify it under the terms of the GNU
 	Affero General Public License as published by
-	the Free Software Foundation, either version 3 
-	of the License, or (at your option) any later 
+	the Free Software Foundation, either version 3
+	of the License, or (at your option) any later
 	version.
 
-	Luma is distributed in the hope that it will be 
-	useful, but WITHOUT ANY WARRANTY; without even 
-	the implied warranty of MERCHANTABILITY or 
-	FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+	Luma is distributed in the hope that it will be
+	useful, but WITHOUT ANY WARRANTY; without even
+	the implied warranty of MERCHANTABILITY or
+	FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 	Affero General Public License for more details.
 
-	You should have received a copy of the GNU 
-	Affero General Public License along with Luma. If not, 
-	see <https://www.gnu.org/licenses/>. 
+	You should have received a copy of the GNU
+	Affero General Public License along with Luma.
+	If not, see <https://www.gnu.org/licenses/>.
 */
 
 use crate::luma::MEMORY_SIZE;
@@ -27,10 +27,10 @@ use crate::luma::device::{Device, Trap};
 impl Device {
 	pub fn trap(&mut self, kind: Trap) {
 		let message = match kind {
-			Trap::BadAlignment(      address, alignment) => format!("bad alignment of address {address:#010X} (should be {alignment}-byte aligned)"),
-			Trap::InvalidArmOpcode(  address, opcode)    => format!("invalid opcode {opcode:#034b} at {address:#010X}"),
-			Trap::InvalidThumbOpcode(address, opcode)    => format!("invalid opcode {opcode:#018b} at {address:#010X}"),
-			Trap::OutOfBounds(       address)            => format!("out-of-bounds address {address:#010X} (limit is {MEMORY_SIZE:#010X})"),
+			Trap::BadAlignment(      address, alignment)                 => format!("bad alignment of address {address:#010X} (should be {alignment}-byte aligned)"),
+			Trap::InvalidArmOpcode(  address, opcode)                    => format!("invalid opcode {opcode:#034b} at {address:#010X}"),
+			Trap::InvalidThumbOpcode(address, opcode)                    => format!("invalid opcode {opcode:#018b} at {address:#010X}"),
+			Trap::OutOfBounds(       address)                            => format!("out-of-bounds address {address:#010X} (limit is {MEMORY_SIZE:#010X})"),
 		};
 
 		eprintln!("{message}");

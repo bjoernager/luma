@@ -1,8 +1,29 @@
+# 0.2A
+
+* Implement Thumb:
+  * ldr  Rd, [Rn, Immediate5]
+  * ldr  Rd, [Rn, Rm]
+  * ldr  Rd, [pc, Immediate8]
+  * ldr  Rd, [sp, Immediate8]
+  * lsl  Rd, Rm,  Immediate5
+  * svc  Immediate8
+  * push Registers
+  * pop  Registers
+  * strh Rd, [Rn, Immediate5]
+  * lsr  Rd, Rm,  Immediate5
+* Update readme
+* Rework instruction functions
+* Improve comments
+* Attach license file
+* Initialise SP
+* Optimise sign-extensions
+* Bump dependency versions
+
 # 0.29
 
 * Implement Thumb:
   * mov Rd, Rm;
-  * movs Rd, immediate_8;
+  * movs Rd, immediate8;
   * movs Rd, Rm;
 * Update readme;
 * Rename condition method to check_condition;

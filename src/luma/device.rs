@@ -3,22 +3,22 @@
 
 	This file is part of Luma.
 
-	Luma is free software: you can redistribute it 
-	and/or modify it under the terms of the GNU 
+	Luma is free software: you can redistribute it
+	and/or modify it under the terms of the GNU
 	Affero General Public License as published by
-	the Free Software Foundation, either version 3 
-	of the License, or (at your option) any later 
+	the Free Software Foundation, either version 3
+	of the License, or (at your option) any later
 	version.
 
-	Luma is distributed in the hope that it will be 
-	useful, but WITHOUT ANY WARRANTY; without even 
-	the implied warranty of MERCHANTABILITY or 
-	FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+	Luma is distributed in the hope that it will be
+	useful, but WITHOUT ANY WARRANTY; without even
+	the implied warranty of MERCHANTABILITY or
+	FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 	Affero General Public License for more details.
 
-	You should have received a copy of the GNU 
-	Affero General Public License along with Luma. If not, 
-	see <https://www.gnu.org/licenses/>. 
+	You should have received a copy of the GNU
+	Affero General Public License along with Luma.
+	If not, see <https://www.gnu.org/licenses/>.
 */
 
 pub mod bootloader;
@@ -30,11 +30,17 @@ pub mod decode_thumb;
 pub mod drop;
 pub mod exchange;
 pub mod image;
+pub mod interrupt;
+pub mod link;
+pub mod load;
 pub mod log;
 pub mod memory;
 pub mod r#move;
 pub mod new;
+pub mod pop;
+pub mod push;
 pub mod read;
+pub mod shift;
 pub mod store;
 pub mod thumb;
 pub mod trap;
@@ -47,9 +53,18 @@ pub enum Trap {
 	OutOfBounds(       u32),
 }
 
-pub enum Branch {
-	Offset(  i32, bool),
-	Register(u8),
+pub enum Log {
+	Branch,
+	Continue,
+	Exchange,
+	Interrupt,
+	Link,
+	Load,
+	Move,
+	Pop,
+	Push,
+	Shift,
+	Store,
 }
 
 pub enum Move {
@@ -58,8 +73,8 @@ pub enum Move {
 }
 
 pub struct Device {
-	pub decode:    fn(&mut Device),
-	
+	pub decode: fn(&mut Device),
+
 	memory:    *mut u8,
 	registers: [u32; 0x10],
 	cpsr:      u32,

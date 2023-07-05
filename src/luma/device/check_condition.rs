@@ -3,28 +3,46 @@
 
 	This file is part of Luma.
 
-	Luma is free software: you can redistribute it 
-	and/or modify it under the terms of the GNU 
+	Luma is free software: you can redistribute it
+	and/or modify it under the terms of the GNU
 	Affero General Public License as published by
-	the Free Software Foundation, either version 3 
-	of the License, or (at your option) any later 
+	the Free Software Foundation, either version 3
+	of the License, or (at your option) any later
 	version.
 
-	Luma is distributed in the hope that it will be 
-	useful, but WITHOUT ANY WARRANTY; without even 
-	the implied warranty of MERCHANTABILITY or 
-	FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+	Luma is distributed in the hope that it will be
+	useful, but WITHOUT ANY WARRANTY; without even
+	the implied warranty of MERCHANTABILITY or
+	FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 	Affero General Public License for more details.
 
-	You should have received a copy of the GNU 
-	Affero General Public License along with Luma. If not, 
-	see <https://www.gnu.org/licenses/>. 
+	You should have received a copy of the GNU
+	Affero General Public License along with Luma.
+	If not, see <https://www.gnu.org/licenses/>.
 */
 
 use crate::luma::device::Device;
 
 impl Device {
 	pub fn check_condition(&self, condition: u8) -> bool {
+		// Code Id.       Predicates
+		// 0    eq        Z==1
+		// 1    ne        Z==0
+		// 2    cs, hs    C==1
+		// 3    cc, lo    C==0
+		// 4    mi        N==1
+		// 5    pl        N==0
+		// 6    vs        V==1
+		// 7    vc        V==0
+		// 8    hi        C==1 && Z==0
+		// 9    ls        C==0 && Z==1
+		// A    ge        N==V
+		// B    lt        N!=V
+		// C    gt        Z==0 && N==V
+		// D    le        Z==1 && N!=V
+		// E    al        true
+		// F    nv        false
+
 		return match condition {
 			0x0 => self.cpsr & 0b01000000000000000000000000000000 != 0x00,
 			0x1 => self.cpsr & 0b01000000000000000000000000000000 == 0x00,
@@ -41,7 +59,7 @@ impl Device {
 			0xC => self.cpsr & 0b01000000000000000000000000000000 == 0x00 && self.cpsr & 0b00010000000000000000000000000000 >> 0x1C == self.cpsr & 0b10000000000000000000000000000000 >> 0x1F,
 			0xD => self.cpsr & 0b01000000000000000000000000000000 != 0x00 || self.cpsr & 0b00010000000000000000000000000000 >> 0x1C != self.cpsr & 0b10000000000000000000000000000000 >> 0x1F,
 			0xE => true,
-			0xF => false, // Unpredictable, but we ignore it.
+			0xF => false,
 			_   => unreachable!(),
 		}
 	}

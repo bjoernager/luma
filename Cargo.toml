@@ -1,6 +1,6 @@
 [package]
 name        = "luma"
-version     = "0.41.0"
+version     = "0.42.0"
 authors     = ["Gabriel Jensen"]
 edition     = "2021"
 description = "AGB emulator."
@@ -20,4 +20,4 @@ lto = true
 toml  = "0.7.5"
 libc  = "0.2.147"
 sdl2  = "0.35.2"
-serde = { version = "1.0.164", features = ["derive"] }
+serde = { version = "1.0.166", features = ["derive"] }
