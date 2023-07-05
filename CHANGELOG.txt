@@ -1,3 +1,9 @@
+# 0.2B
+
+* Update messages
+* Fix lsr and lsl
+* Fix str
+
 # 0.2A
 
 * Implement Thumb:

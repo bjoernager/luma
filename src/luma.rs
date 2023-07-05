@@ -32,7 +32,7 @@ pub struct VersionType<T> {
 
 pub const VERSION: VersionType::<u32> = VersionType::<u32> {
 	major: 0x0,
-	minor: 0x2A,
+	minor: 0x2B,
 };
 
 pub struct WidthHeight<T> {

@@ -48,7 +48,7 @@ impl Device {
 			let value = self.registers[0xD];
 
 			self.write_word(address, value);
-			self.log(Log::Push, format!("{address:#010X} = lr ({value:#010X})"));
+			self.log(Log::Push, format!("{address:#010X} => lr ({value:#010X})"));
 		}
 
 		self.registers[0xE] = start;

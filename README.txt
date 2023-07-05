@@ -65,8 +65,8 @@ Moreover, the following Thumb instructions are supported:
  * ldr        Rd,  [Rn,  Rm]
  * ldr        Rd,  [r13, Immediate8]
  * ldr        Rd,  [r15, Immediate8]
- * lsl        Rd,  Rm,   Immediate5
- * lsr        Rd,  Rm,   Immediate5
+ * lsls       Rd,  Rm,   Immediate5
+ * lsrs       Rd,  Rm,   Immediate5
  * mov        Rd,  Rn
  * movs       Rd,  Immediate8
  * movs       Rd,  Rn

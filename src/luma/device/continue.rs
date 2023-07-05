@@ -30,7 +30,7 @@ impl Device {
 
 		(self.registers[0xF], _) = self.registers[0xF].overflowing_add(0x4);
 
-		self.log(Log::Continue, format!("pc => pc+4={:#010X}", self.registers[0xF]));
+		self.log(Log::Continue, format!("pc => pc+4 ({:#010X})", self.registers[0xF]));
 	}
 
 	pub fn thumb_continue(&mut self) {
@@ -39,6 +39,6 @@ impl Device {
 
 		(self.registers[0xF], _) = self.registers[0xF].overflowing_add(0x2);
 
-		self.log(Log::Continue, format!("pc => pc+2={:#010X}", self.registers[0xF]));
+		self.log(Log::Continue, format!("pc => pc+2 ({:#010X})", self.registers[0xF]));
 	}
 }

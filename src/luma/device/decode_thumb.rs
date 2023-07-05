@@ -136,7 +136,7 @@ impl Device {
 
 			let source = ((opcode & 0b0000000000111000) >> 0x3) as u8;
 
-			let immediate = ((opcode & 0b0000011111000000) >> 0x5) as u8;
+			let immediate = ((opcode & 0b0000011111000000) >> 0x6) as u8;
 
 			self.thumb_shift_left(destination, source, immediate);
 			return self.thumb_continue();
@@ -148,7 +148,7 @@ impl Device {
 
 			let source = ((opcode & 0b0000000000111000) >> 0x3) as u8;
 
-			let immediate = ((opcode & 0b0000011111000000) >> 0x5) as u8;
+			let immediate = ((opcode & 0b0000011111000000) >> 0x6) as u8;
 
 			self.thumb_shift_right(destination, source, immediate);
 			return self.thumb_continue();
@@ -208,7 +208,7 @@ impl Device {
 		if opcode & 0b1111100000000000 == 0b1000000000000000 {
 			let source = (opcode & 0b0000000000000111) as u8;
 
-			let base = ((opcode & 0b0000000000000111) >> 0x3) as u8;
+			let base = ((opcode & 0b0000000000111000) >> 0x3) as u8;
 
 			let immediate = ((opcode & 0b0000011111000000) >> 0x6) as u8;
 

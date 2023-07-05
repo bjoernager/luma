@@ -68,7 +68,7 @@ impl Device {
 		let value = (self.registers[source as usize] & 0b00000000000000001111111111111111) as u16;
 		self.write_halfword(address, value);
 
-		self.log(Log::Store, format!("r{source} => r{base}{immediate:+} ({value:#06X})"));
+		self.log(Log::Store, format!("r{source} => r{base}{immediate:+}={address:#010X} ({value:#06X})"));
 	}
 
 }
