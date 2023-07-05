@@ -1,3 +1,7 @@
+# 0.2C
+
+* Fill window according to first palette entry;
+
 # 0.2B
 
 * Update messages

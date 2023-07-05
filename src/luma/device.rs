@@ -37,6 +37,7 @@ pub mod log;
 pub mod memory;
 pub mod r#move;
 pub mod new;
+pub mod palette;
 pub mod pop;
 pub mod push;
 pub mod read;
@@ -44,6 +45,7 @@ pub mod shift;
 pub mod store;
 pub mod thumb;
 pub mod trap;
+pub mod video;
 pub mod write;
 
 pub enum Trap {

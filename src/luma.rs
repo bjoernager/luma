@@ -32,7 +32,7 @@ pub struct VersionType<T> {
 
 pub const VERSION: VersionType::<u32> = VersionType::<u32> {
 	major: 0x0,
-	minor: 0x2B,
+	minor: 0x2C,
 };
 
 pub struct WidthHeight<T> {
@@ -46,6 +46,8 @@ pub const MEMORY_SIZE: usize = 0x0E010000;
 
 pub const BOOTLOADER_SIZE: usize = 0x00004000;
 pub const IMAGE_SIZE:      usize = 0x02000000;
+pub const VIDEO_SIZE:      usize = 0x00018000;
+pub const PALETTE_SIZE:    usize = 0x00000400;
 
 pub const SCREEN_SIZE: WidthHeight::<u8> = WidthHeight::<u8> {
 	width:  0xF0,

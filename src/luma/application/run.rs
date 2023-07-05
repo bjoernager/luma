@@ -25,6 +25,7 @@ use crate::luma::VERSION;
 use crate::luma::application::{Application, GOT_SIGNAL};
 
 use sdl2::event::Event;
+use sdl2::pixels::Color;
 use std::sync::atomic::Ordering;
 use std::thread::sleep;
 use std::time::Duration;
@@ -58,6 +59,23 @@ impl Application {
 			if cfg!(debug_assertions) { eprintln!("({cycle})"); }
 
 			(self.device.decode)(&mut self.device);
+
+			let raw_colour = self.device.palette()[0x0];
+
+			let colour = {
+				let red = ((raw_colour & 0b0000000000011111) << 0x3) as u8;
+
+				let green = ((raw_colour & 0b0000001111100000) >> 0x2) as u8;
+
+				let blue = ((raw_colour & 0b0111110000000000) >> 0x7) as u8;
+
+				Color::RGB(red, green, blue)
+			};
+
+			self.canvas.set_draw_color(colour);
+			self.canvas.clear();
+
+			self.canvas.present();
 
 			sleep(Duration::from_millis(250));
 		}

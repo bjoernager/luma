@@ -55,11 +55,13 @@ impl Application {
 
 		let window = sdl_video.window("luma", SCREEN_SIZE.width as u32 * configuration.scale, SCREEN_SIZE.height as u32 * configuration.scale).position_centered().build().unwrap();
 
+		let canvas = window.into_canvas().build().unwrap();
+
 		return Application {
 			configuration: configuration.clone(),
 			sdl:           sdl,
 			sdl_video:     sdl_video,
-			window:        window,
+			canvas:        canvas,
 			device:        Device::new(),
 		};
 	}

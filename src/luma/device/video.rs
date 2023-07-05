@@ -21,27 +21,14 @@
 	If not, see <https://www.gnu.org/licenses/>.
 */
 
-use crate::luma::configuration::Configuration;
+use crate::luma::VIDEO_SIZE;
 use crate::luma::device::Device;
 
-extern crate sdl2;
+use std::slice;
 
-use sdl2::{Sdl, VideoSubsystem};
-use sdl2::render::WindowCanvas;
-use sdl2::video::Window;
-use std::sync::atomic::AtomicBool;
-
-pub mod drop;
-pub mod initialise;
-pub mod load;
-pub mod run;
-
-pub struct Application {
-	configuration: Configuration,
-	sdl:           Sdl,
-	sdl_video:     VideoSubsystem,
-	canvas:        WindowCanvas,
-	device:        Device,
+impl Device {
+	#[allow(dead_code)]
+	pub fn video<'a>(&mut self) -> &'a mut [u8] {
+		return unsafe { slice::from_raw_parts_mut(self.memory.offset(0x06000000), VIDEO_SIZE) };
+	}
 }
-
-pub static mut GOT_SIGNAL: AtomicBool = AtomicBool::new(false);
