@@ -21,16 +21,14 @@
 	If not, see <https://www.gnu.org/licenses/>.
 */
 
-pub mod load;
-pub mod validate;
+use crate::luma::VIDEO_LENGTH;
+use crate::luma::cpu_handle::CpuHandle;
 
-pub struct Configuration {
-	pub bootloader: String,
-	pub image:      String,
+impl CpuHandle {
+	pub fn dump_video(&mut self, buffer: &mut [u8]) {
+		assert_eq!(buffer.len(), VIDEO_LENGTH as usize);
 
-	pub scale: u32,
-}
-
-impl Configuration {
-	pub const VERSION: u32 = 0x0;
+		let state = self.state.lock().unwrap();
+		buffer.copy_from_slice(state.video8());
+	}
 }

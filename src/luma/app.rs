@@ -21,16 +21,26 @@
 	If not, see <https://www.gnu.org/licenses/>.
 */
 
+use sdl2::Sdl;
+use sdl2::render::WindowCanvas;
+use std::sync::Arc;
+use std::sync::atomic::AtomicBool;
+
+pub mod check_events;
+pub mod draw_video;
+pub mod init;
 pub mod load;
-pub mod validate;
+pub mod run;
+pub mod sync_video;
 
-pub struct Configuration {
-	pub bootloader: String,
-	pub image:      String,
+pub struct App {
+	bootloader: String,
+	image:      String,
 
-	pub scale: u32,
-}
+	scale: u32,
 
-impl Configuration {
-	pub const VERSION: u32 = 0x0;
+	got_terminate: Arc::<AtomicBool>,
+
+	sdl:    Sdl,
+	canvas: WindowCanvas,
 }

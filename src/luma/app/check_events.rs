@@ -21,16 +21,32 @@
 	If not, see <https://www.gnu.org/licenses/>.
 */
 
-pub mod load;
-pub mod validate;
+use crate::luma::app::App;
 
-pub struct Configuration {
-	pub bootloader: String,
-	pub image:      String,
+use sdl2::event::Event;
+use std::sync::atomic::Ordering;
 
-	pub scale: u32,
-}
+impl App {
+	pub fn check_events(&mut self) -> Result<bool, String> {
+		// Return true if we should quit.
 
-impl Configuration {
-	pub const VERSION: u32 = 0x0;
+		let mut event_pump = match self.sdl.event_pump() {
+			Ok(pump) => pump,
+			_        => return Err("unable to get event pump".to_string()),
+		};
+
+		if self.got_terminate.load(Ordering::Relaxed) {
+			eprintln!("got terminate");
+			return Ok(true)
+		};
+
+		for event in event_pump.poll_iter() {
+			match event {
+				Event::Quit {..} => return Ok(true),
+				_                => {},
+			};
+		}
+
+		return Ok(false);
+	}
 }

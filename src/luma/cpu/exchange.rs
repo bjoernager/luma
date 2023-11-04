@@ -21,16 +21,19 @@
 	If not, see <https://www.gnu.org/licenses/>.
 */
 
-pub mod load;
-pub mod validate;
+macro_rules! exchange {
+	($cpu: expr, $t: expr) => {{
+		use crate::luma::cpu::Decoder;
 
-pub struct Configuration {
-	pub bootloader: String,
-	pub image:      String,
+		const DATA: [(u32, Decoder); 0x2] = [
+			(0x4, Cpu::decode_arm),
+			(0x2, Cpu::decode_thumb),
+		];
 
-	pub scale: u32,
+		let index = $t as usize & 0b1;
+
+		$cpu.instruction_size = unsafe { DATA.get_unchecked(index).0 };
+		$cpu.decoder          = unsafe { DATA.get_unchecked(index).1 };
+	}};
 }
-
-impl Configuration {
-	pub const VERSION: u32 = 0x0;
-}
+pub(crate) use exchange;

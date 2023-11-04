@@ -21,16 +21,35 @@
 	If not, see <https://www.gnu.org/licenses/>.
 */
 
-pub mod load;
-pub mod validate;
+use crate::luma::state::State;
 
-pub struct Configuration {
-	pub bootloader: String,
-	pub image:      String,
+use std::sync::{Arc, Mutex};
+use std::sync::atomic::AtomicBool;
+use std::thread::JoinHandle;
 
-	pub scale: u32,
+pub mod dump_video;
+pub mod dump_palette;
+pub mod kill;
+
+pub struct CpuHandle {
+	state: Arc<Mutex<State>>,
+	dead:  Arc<AtomicBool>,
+
+	handle: JoinHandle<()>,
 }
 
-impl Configuration {
-	pub const VERSION: u32 = 0x0;
+impl CpuHandle {
+	pub fn new(
+		state: Arc<Mutex<State>>,
+		dead:  Arc<AtomicBool>,
+
+		handle: JoinHandle<()>,
+	) -> Self {
+		return Self {
+			state: state,
+			dead:  dead,
+
+			handle: handle,
+		};
+	}
 }

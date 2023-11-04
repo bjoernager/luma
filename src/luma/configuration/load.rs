@@ -21,81 +21,80 @@
 	If not, see <https://www.gnu.org/licenses/>.
 */
 
-use crate::luma::CONFIGURATION_VERSION;
 use crate::luma::configuration::Configuration;
 
-extern crate serde;
 extern crate toml;
 
-use std::env::var;
 use std::fs::read_to_string;
-use serde::Deserialize;
-
-#[derive(Deserialize)]
-struct Container {
-	luma:   Luma,
-	device: Device,
-	video:  Video,
-}
-
-#[derive(Deserialize)]
-struct Luma {
-	version: Option<u32>,
-}
-
-#[derive(Deserialize)]
-struct Device {
-	bootloader: Option<String>,
-	image:      Option<String>,
-}
-
-#[derive(Deserialize)]
-struct Video {
-	scale: Option<u32>,
-}
+use std::str::FromStr;
+use toml::{Table, Value};
 
 impl Configuration {
-	pub(super) fn load(&mut self) {
-		let configuration_path = Configuration::path();
+	pub fn load(path: &str) -> Result<Self, String> {
+		eprintln!("loading configuration at \"{path}\"");
 
-		eprintln!("loading configuration \"{configuration_path}\"");
-
-		let contents = match read_to_string(configuration_path) {
-			Ok( contents) => contents,
-			Err(_)        => {
-				eprintln!("unable to read configuration file");
-				return self.create();
-			},
+		let configuration_text = match read_to_string(path) {
+			Ok( content) => content,
+			_            => return Err("unable to read file".to_string()),
 		};
 
-		let configuration: Container = toml::from_str(contents.as_str()).expect("unable to parse configuration file");
-
-		let version = configuration.luma.version.expect("missing value 'version' under 'luma'");
-		if version < CONFIGURATION_VERSION { panic!("ancient version: downgrade configuration") }
-		if version > CONFIGURATION_VERSION { panic!("out-of-date version: upgrade configuration") }
-
-		let get_path = |output_path: &mut String, input_path: Option<String>| {
-			match input_path {
-				Some(path) => {
-						*output_path = if path.chars().nth(0x0).unwrap() != '/' {
-							let home_directory = match var("HOME") {
-								Ok( path) => path,
-								Err(_)    => { eprintln!("unable to get home directory"); "".to_string() },
-							};
-
-							home_directory + "/" + &path
-						} else { path }
-					},
-				None => {},
-			};
+		let base_table = match Table::from_str(&configuration_text) {
+			Ok( table) => table,
+			_          => return Err("unable to parse configuration".to_string()),
 		};
 
-		get_path(&mut self.bootloader, configuration.device.bootloader);
-		get_path(&mut self.image,      configuration.device.image);
+		let luma_table   = get_table(&base_table, "luma")?;
+		let device_table = get_table(&base_table, "device")?;
+		let video_table  = get_table(&base_table, "video")?;
 
-		if configuration.video.scale.is_some() {
-			self.scale = configuration.video.scale.unwrap();
-			assert!(self.scale >= 0x1);
-		}
+		let version = get_integer(&luma_table, "version")?;
+
+		if version < Self::VERSION { return Err(format!("ancient version - got {}, expected {}", version, Self::VERSION)) }
+		if version > Self::VERSION { return Err(format!("out-of-date version - got {}, expected {}", version, Self::VERSION)) }
+
+		let bootloader = get_string(&device_table, "bootloader")?;
+		let image      = get_string(&device_table, "image")?;
+
+		let scale = get_integer(&video_table, "scale")?;
+
+		let configuration = Configuration {
+			bootloader: bootloader.clone(),
+			image:      image.clone(),
+
+			scale: scale,
+		};
+
+		configuration.validate()?;
+		return Ok(configuration);
 	}
+}
+
+fn get_value<'a>(table: &'a Table, name: &str) -> Option<&'a Value> {
+	if !table.contains_key(name) { return None };
+
+	return Some(&table[name]);
+}
+
+fn get_table<'a>(table: &'a Table, name: &str) -> Result<&'a Table, String> {
+	return match get_value(table, name) {
+		Some(Value::Table(table)) => Ok(table),
+		Some(_)                   => Err(format!("\"{name}\" should be a section")),
+		_                         => Err("section \"{name}\" is required".to_string()),
+	};
+}
+
+fn get_integer(table: &Table, name: &str) -> Result<u32, String> {
+	return match get_value(table, name) {
+		Some(Value::Integer(value)) => Ok(*value as u32),
+		Some(_)                     => Err(format!("\"{name}\" should be an integer")),
+		_                           => Err("missing integer \"{name}\"".to_string()),
+	};
+}
+
+fn get_string<'a>(table: &'a Table, name: &str) -> Result<&'a String, String> {
+	return match get_value(table, name) {
+		Some(Value::String(string)) => Ok(string),
+		Some(_)                     => Err(format!("\"{name}\" should be a string")),
+		_                           => Err("missing string \"{name}\"".to_string()),
+	};
 }

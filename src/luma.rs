@@ -21,35 +21,63 @@
 	If not, see <https://www.gnu.org/licenses/>.
 */
 
-pub mod application;
+use sdl2::pixels::Color;
+
+pub mod app;
 pub mod configuration;
-pub mod device;
+pub mod cpu;
+pub mod cpu_handle;
+pub mod instruction;
+pub mod state;
 
-pub struct VersionType<T> {
-	major: T,
-	minor: T,
+pub const VERSION: (u32, u32) = (
+	0x0,  // major
+	0x2D, // minor
+);
+
+pub enum Error {
+	BadAlignment(      u32, u32),
+	InvalidArmOpcode(  u32, u32),
+	InvalidThumbOpcode(u32, u16),
+	OutOfBounds(       u32),
 }
 
-pub const VERSION: VersionType::<u32> = VersionType::<u32> {
-	major: 0x0,
-	minor: 0x2C,
-};
+impl Error {
+	pub fn trap(&self) {
+		let message = match self {
+			Error::BadAlignment(        address, alignment) => format!("bad alignment of address {address:#010X} (should be {alignment}-byte aligned)"),
+			Error::InvalidArmOpcode(    address, opcode)    => format!("invalid opcode {opcode:#034b} at {address:#010X}"),
+			Error::InvalidThumbOpcode(  address, opcode)    => format!("invalid opcode {opcode:#018b} at {address:#010X}"),
+			Error::OutOfBounds(         address)            => format!("out-of-bounds address {address:#010X} (limit is {:#010X})", MEMORY_LENGTH),
+		};
 
-pub struct WidthHeight<T> {
-	width:  T,
-	height: T,
+		eprintln!("trap: {message}");
+	}
 }
 
-pub const CONFIGURATION_VERSION: u32 = 0x0;
+pub const MEMORY_LENGTH: u32 = 0x0E010000;
 
-pub const MEMORY_SIZE: usize = 0x0E010000;
+pub const BOOTLOADER_LENGTH: u32 = 0x00004000;
+pub const IMAGE_LENGTH:      u32 = 0x02000000;
+pub const VIDEO_LENGTH:      u32 = 0x00018000;
+pub const PALETTE_LENGTH:    u32 = 0x00000400;
 
-pub const BOOTLOADER_SIZE: usize = 0x00004000;
-pub const IMAGE_SIZE:      usize = 0x02000000;
-pub const VIDEO_SIZE:      usize = 0x00018000;
-pub const PALETTE_SIZE:    usize = 0x00000400;
+pub const SCREEN_SIZE: (u8, u8) = (
+	0xF0, // width
+	0xA0, // height
+);
 
-pub const SCREEN_SIZE: WidthHeight::<u8> = WidthHeight::<u8> {
-	width:  0xF0,
-	height: 0xA0,
-};
+pub const fn decode_colour(colour: u16) -> Color {
+	let red   = ((colour & 0b0000000000011111) << 0x3) as u8;
+	let green = ((colour & 0b0000001111100000) >> 0x2) as u8;
+	let blue  = ((colour & 0b0111110000000000) >> 0x7) as u8;
+
+	return Color::RGB(red, green, blue);
+}
+
+pub fn log(message: &str) {
+	// This optimises the function away.
+   if cfg!(debug_assertions) {
+	   eprintln!("{message}");
+   }
+}

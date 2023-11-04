@@ -21,16 +21,24 @@
 	If not, see <https://www.gnu.org/licenses/>.
 */
 
-pub mod load;
-pub mod validate;
+use crate::luma::app::App;
 
-pub struct Configuration {
-	pub bootloader: String,
-	pub image:      String,
+use std::thread::sleep;
+use std::time::{Duration, Instant};
 
-	pub scale: u32,
-}
+impl App {
+	pub fn sync_video(&self, frame_start: Instant) {
+		// Courtesy of TASVideos: <https://tasvideos.org/PlatformFramerates>
+		// 59.7275005696058 Hz
 
-impl Configuration {
-	pub const VERSION: u32 = 0x0;
+		const FRAME_DURATION: u64 = 0xFF7932;
+		let frame_duration        = Duration::from_nanos(FRAME_DURATION);
+
+		let remaining = match frame_duration.checked_sub(frame_start.elapsed()) {
+			Some(value) => value,
+			None        => Duration::from_secs(0x0),
+		};
+
+		sleep(remaining);
+	}
 }

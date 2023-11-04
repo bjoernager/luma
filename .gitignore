@@ -1,4 +1,7 @@
 *.agb
+*.elf
+*.o
+*.sav
 vgcore.*
 /target
 /old

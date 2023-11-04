@@ -21,16 +21,16 @@
 	If not, see <https://www.gnu.org/licenses/>.
 */
 
-pub mod load;
-pub mod validate;
+use crate::luma::PALETTE_LENGTH;
+use crate::luma::cpu_handle::CpuHandle;
 
-pub struct Configuration {
-	pub bootloader: String,
-	pub image:      String,
+use std::ptr::copy_nonoverlapping;
 
-	pub scale: u32,
-}
+impl CpuHandle {
+	pub fn dump_palette(&mut self, buffer: &mut [u16]) {
+		assert_eq!(buffer.len(), PALETTE_LENGTH as usize >> 0x1);
 
-impl Configuration {
-	pub const VERSION: u32 = 0x0;
+		let state = self.state.lock().unwrap();
+		unsafe { copy_nonoverlapping(state.palette().as_ptr(), buffer.as_mut_ptr(), buffer.len()) };
+	}
 }

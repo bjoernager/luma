@@ -21,16 +21,12 @@
 	If not, see <https://www.gnu.org/licenses/>.
 */
 
-pub mod load;
-pub mod validate;
-
-pub struct Configuration {
-	pub bootloader: String,
-	pub image:      String,
-
-	pub scale: u32,
-}
+use crate::luma::configuration::Configuration;
 
 impl Configuration {
-	pub const VERSION: u32 = 0x0;
+	pub(super) fn validate(&self) -> Result<(), String> {
+		if self.scale < 0x1 { return Err("scale must be at least 1".to_string()) };
+
+		return Ok(());
+	}
 }

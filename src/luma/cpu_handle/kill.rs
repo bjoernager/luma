@@ -21,16 +21,20 @@
 	If not, see <https://www.gnu.org/licenses/>.
 */
 
-pub mod load;
-pub mod validate;
+use crate::luma::cpu_handle::CpuHandle;
 
-pub struct Configuration {
-	pub bootloader: String,
-	pub image:      String,
+use std::sync::atomic::Ordering;
 
-	pub scale: u32,
-}
+impl CpuHandle {
+	#[must_use]
+	pub fn kill(self) -> Result<(), String> {
+		eprintln!("got kill order");
 
-impl Configuration {
-	pub const VERSION: u32 = 0x0;
+		self.dead.store(true, Ordering::Relaxed);
+		self.handle.join().unwrap();
+
+		self.dead.store(false, Ordering::Relaxed);
+
+		return Ok(());
+	}
 }

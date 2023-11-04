@@ -21,16 +21,13 @@
 	If not, see <https://www.gnu.org/licenses/>.
 */
 
-pub mod load;
-pub mod validate;
+use crate::luma::cpu::Cpu;
 
-pub struct Configuration {
-	pub bootloader: String,
-	pub image:      String,
+impl Cpu {
+	pub(super) fn r#continue(&mut self) {
+		let mut state = self.state.lock().unwrap();
 
-	pub scale: u32,
-}
-
-impl Configuration {
-	pub const VERSION: u32 = 0x0;
+		let pc = state.read_register(0xF).wrapping_add(self.instruction_size);
+		state.write_register(0xF, pc);
+	}
 }
