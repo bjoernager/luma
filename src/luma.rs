@@ -21,8 +21,6 @@
 	If not, see <https://www.gnu.org/licenses/>.
 */
 
-use sdl2::pixels::Color;
-
 pub mod app;
 pub mod configuration;
 pub mod cpu;
@@ -32,7 +30,7 @@ pub mod state;
 
 pub const VERSION: (u32, u32) = (
 	0x0,  // major
-	0x2D, // minor
+	0x2E, // minor
 );
 
 pub enum Error {
@@ -51,7 +49,7 @@ impl Error {
 			Error::OutOfBounds(         address)            => format!("out-of-bounds address {address:#010X} (limit is {:#010X})", MEMORY_LENGTH),
 		};
 
-		eprintln!("trap: {message}");
+		eprintln!("\u{1B}[1m\u{1B}[91mtrap\u{1B}[0m: {message}");
 	}
 }
 
@@ -67,17 +65,26 @@ pub const SCREEN_SIZE: (u8, u8) = (
 	0xA0, // height
 );
 
-pub const fn decode_colour(colour: u16) -> Color {
-	let red   = ((colour & 0b0000000000011111) << 0x3) as u8;
-	let green = ((colour & 0b0000001111100000) >> 0x2) as u8;
-	let blue  = ((colour & 0b0111110000000000) >> 0x7) as u8;
+macro_rules! log {
+	() => {
+		eprintln!();
+	};
 
-	return Color::RGB(red, green, blue);
+	($($message: tt)*) => {{
+		if cfg!(debug_assertions) {
+			eprintln!("{}", format!($($message)?));
+		}
+	}};
 }
+pub(crate) use log;
 
-pub fn log(message: &str) {
-	// This optimises the function away.
-   if cfg!(debug_assertions) {
-	   eprintln!("{message}");
-   }
+macro_rules! log_assignment {
+	($name: expr, $value: expr) => {{
+		use crate::luma::log;
+
+		if cfg!(debug_assertions) {
+			log!("\u{1B}[3m\u{B7} \u{1B}[1m{}\u{1B}[22m = {}\u{1B}[0m", format!($name), format!($value));
+		}
+	}};
 }
+pub(crate) use log_assignment;

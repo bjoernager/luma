@@ -25,23 +25,23 @@ use crate::luma::log;
 use crate::luma::cpu::{Cpu, exchange};
 
 impl Cpu {
-	pub(super) fn branch(&mut self, offset: i32) {
+	pub(super) fn isa_branch(&mut self, imm: i32) {
 		let mut state = self.state.lock().unwrap();
 
-		let mut target = state.read_register(0xF).wrapping_add_signed(offset);
+		let mut target = state.read_register(0xF).wrapping_add_signed(imm);
 
-		log(&format!("b {target:#X}"));
+		log!("b {target:#X}");
 
 		target = target.wrapping_add(self.instruction_size);
 		state.write_register(0xF, target);
 	}
 
-	pub(super) fn branch_exchange(&mut self, source: u8) {
+	pub(super) fn isa_branch_exchange(&mut self, rm: u8) {
 		let mut state = self.state.lock().unwrap();
 
-		log(&format!("bx r{source}"));
+		log!("bx r{rm}");
 
-		let mut target = state.read_register(source);
+		let mut target = state.read_register(rm);
 
 		let t = target & 0b00000000000000000000000000000001 != 0x0;
 		exchange!(self, t);
@@ -54,32 +54,32 @@ impl Cpu {
 		state.write_register(0xF, target);
 	}
 
-	pub(super) fn branch_link(&mut self, offset: i32) {
+	pub(super) fn isa_branch_link(&mut self, imm: i32) {
 		let mut state = self.state.lock().unwrap();
 
-		let mut target = state.read_register(0xF).wrapping_add_signed(offset);
+		let mut target = state.read_register(0xF).wrapping_add_signed(imm);
 
-		log(&format!("bl {target:#X}"));
+		log!("bl {target:#X}");
 
 		target = target.wrapping_add(self.instruction_size);
 		state.write_register(0xF, target);
 	}
 
-	pub(super) fn branch_link_prefix(&mut self, offset: i32) {
+	pub(super) fn isa_branch_link_prefix(&mut self, imm: i32) {
 		let mut state = self.state.lock().unwrap();
 
-		let target = state.read_register(0xF).wrapping_add_signed(offset);
+		let target = state.read_register(0xF).wrapping_add_signed(imm);
 
 		state.write_register(0xE, target);
 	}
 
-	pub(super) fn branch_link_suffix(&mut self, offset: i32) {
+	pub(super) fn isa_branch_link_suffix(&mut self, imm: i32) {
 		let mut state = self.state.lock().unwrap();
 
-		let mut branch_target = state.read_register(0xE).wrapping_add_signed(offset);
+		let mut branch_target = state.read_register(0xE).wrapping_add_signed(imm);
 		let     link_target   = state.read_register(0xF).wrapping_sub(0x2);
 
-		log(&format!("bl {branch_target:#X}"));
+		log!("bl {branch_target:#X}");
 
 		state.write_register(0xE, link_target);
 

@@ -73,32 +73,55 @@ impl Cpu {
 		use Instruction::*;
 
 		match instruction {
-			AddImmediate(                           destination, base, immediate) => self.add_immediate(                        destination, base, immediate),
-			AddRegister(                            destination, base, immediate) => self.add_register(                         destination, base, immediate),
-			Branch(                                 offset)                       => self.branch(                               offset),
-			BranchExchange(                         source)                       => self.branch_exchange(                      source),
-			BranchLink(                             offset)                       => self.branch_link(                          offset),
-			BranchLinkPrefix(                       offset)                       => self.branch_link_prefix(                   offset),
-			BranchLinkSuffix(                       offset)                       => self.branch_link_suffix(                   offset),
-			CompareImmediate(                       register, immediate)          => self.compare_immediate(                    register, immediate),
-			CompareRegister(                        left, right)                  => self.compare_register(                     left, right),
-			LoadHalfword(                           destination, base, offset)    => self.load_halfword(                        destination, base, offset),
-			LoadImmediateOffset(                    destination, base, offset)    => self.load_immediate_offset(                destination, base, offset),
-			LoadPc(                                 destination, offset)          => self.load_pc(                              destination, offset),
-			MoveImmediate(                          destination, immediate)       => self.move_immediate(                       destination, immediate),
-			MoveImmediateArithmeticShiftRight(      destination, base, shift)     => self.move_immediate_arithmetic_shift_right(destination, base, shift),
-			MoveImmediateLogicalShiftLeftImmediate( destination, base, shift)     => self.move_immediate_logical_shift_left(    destination, base, shift),
-			MoveImmediateLogicalShiftRightImmediate(destination, base, shift)     => self.move_immediate_logical_shift_right(   destination, base, shift),
-			MoveRegister(                           destination, source)          => self.move_register(                        destination, source),
-			MoveRegisterArithmeticShiftRight(       destination, base, shift)     => self.move_register_arithmetic_shift_right( destination, base, shift),
-			MoveRegisterLogicalShiftLeftImmediate(  destination, base, shift)     => self.move_register_logical_shift_left(     destination, base, shift),
-			MoveRegisterLogicalShiftRightImmediate( destination, base, shift)     => self.move_register_logical_shift_right(    destination, base, shift),
-			StoreByteImmediateOffset(               source, base, offset)         => self.store_byte_immediate_offset(          source, base, offset),
-			StoreByteRegisterOffset(                source, base, offset)         => self.store_byte_register_offset(           source, base, offset),
-			StoreHalfword(                          source, base, offset)         => self.store_halfword(                       source, base, offset),
-			StoreImmediateOffset(                   source, base, offset)         => self.store_immediate_offset(               source, base, offset),
-			SubtractImmediate(                      destination, base, immediate) => self.subtract_immediate(                    destination, base, immediate),
-			SubtractRegister(                       destination, base, immediate) => self.subtract_register(                     destination, base, immediate),
+			// Arithmetic:
+			AddCarryRegister(        rd, rn, rm)  => self.isa_add_carry_register(        rd, rn, rm),
+			AddImmediate(            rd, rn, imm) => self.isa_add_immediate(             rd, rn, imm),
+			AddRegister(             rd, rn, rm)  => self.isa_add_register(              rd, rn, rm),
+			MultiplyRegister(        rd, rm, rs)  => self.isa_multiply_register(         rd, rm, rs),
+			ReverseSubtractImmediate(rd, rm, imm) => self.isa_reverse_subtract_immediate(rd, rm, imm),
+			SubtractCarryRegister(   rd, rn, rm)  => self.isa_subtract_carry_register(   rd, rn, rm),
+			SubtractImmediate(       rd, rn, imm) => self.isa_subtract_immediate(        rd, rn, imm),
+			SubtractRegister(        rd, rn, rm)  => self.isa_subtract_register(         rd, rn, rm),
+
+			// Bitwise:
+			AndRegister(        rd, rn, rm) => self.isa_and_register(         rd, rn, rm),
+			BitClearRegister(   rd, rn, rm) => self.isa_bit_clear_register(   rd, rn, rm),
+			LogicalOrRegister(  rd, rn, rm) => self.isa_logical_or_register(  rd, rn, rm),
+			ExclusiveOrRegister(rd, rn, rm) => self.isa_exclusive_or_register(rd, rn, rm),
+
+			// Branch:
+			Branch(          imm) => self.isa_branch(            imm),
+			BranchExchange(  rm)  => self.isa_branch_exchange(   rm),
+			BranchLink(      imm) => self.isa_branch_link(       imm),
+			BranchLinkPrefix(imm) => self.isa_branch_link_prefix(imm),
+			BranchLinkSuffix(imm) => self.isa_branch_link_suffix(imm),
+
+			// Logic:
+			CompareImmediate(       rn, imm) => self.isa_compare_immediate(        rn, imm),
+			CompareNegativeRegister(rn, rm)  => self.isa_compare_negative_register(rn, rm),
+			CompareRegister(        rn, rm)  => self.isa_compare_register(         rn, rm),
+			TestRegister(           rn, rm)  => self.isa_test_register(            rn, rm),
+
+			// Memory:
+			LoadHalfword(            rd, rn, imm) => self.isa_load_halfword(              rd, rn, imm),
+			LoadImmediateOffset(     rd, rn, imm) => self.isa_load_immediate_offset(      rd, rn, imm),
+			LoadPc(                  rd, rn)      => self.isa_load_pc(                    rd, rn),
+			StoreByteImmediateOffset(rd, rn, imm) => self.isa_store_byte_immediate_offset(rd, rn, imm),
+			StoreByteRegisterOffset( rd, rn, rm)  => self.isa_store_byte_register_offset( rd, rn, rm),
+			StoreHalfword(           rd, rn, imm) => self.isa_store_halfword(             rd, rn, imm),
+			StoreImmediateOffset(    rd, rn, imm) => self.isa_store_immediate_offset(     rd, rn, imm),
+
+			// Move:
+			MoveImmediate(                          rd, imm)    => self.isa_move_immediate(                       rd, imm),
+			MoveImmediateArithmeticShiftRight(      rd, rm, rs) => self.isa_move_immediate_arithmetic_shift_right(rd, rm, rs),
+			MoveImmediateLogicalShiftLeftImmediate( rd, rm, rs) => self.isa_move_immediate_logical_shift_left(    rd, rm, rs),
+			MoveImmediateLogicalShiftRightImmediate(rd, rm, rs) => self.isa_move_immediate_logical_shift_right(   rd, rm, rs),
+			MoveNotRegister(                        rd, rm)     => self.isa_move_not_register(                    rd, rm),
+			MoveRegister(                           rd, rm)     => self.isa_move_register(                        rd, rm),
+			MoveRegisterArithmeticShiftRight(       rd, rm, rs) => self.isa_move_register_arithmetic_shift_right( rd, rm, rs),
+			MoveRegisterLogicalShiftLeftImmediate(  rd, rm, rs) => self.isa_move_register_logical_shift_left(     rd, rm, rs),
+			MoveRegisterLogicalShiftRightImmediate( rd, rm, rs) => self.isa_move_register_logical_shift_right(    rd, rm, rs),
+			MoveRegisterRotateRight(                rd, rm, rs) => self.isa_move_register_rotate_right(           rd, rm, rs),
 
 			Undefined => {},
 		};

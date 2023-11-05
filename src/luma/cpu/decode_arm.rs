@@ -37,7 +37,8 @@ impl Cpu {
 
 		drop(state);
 
-		log(&format!("{opcode:#034b} @ {address:#010X} - ({})", self.cycle));
+		log!();
+		log!("\u{1B}[1m{opcode:032b}\u{1B}[0m @ \u{1B}[1m{address:08X}\u{1B}[0m - ({})", self.cycle);
 
 		return decode(address, opcode);
 	}
@@ -156,7 +157,7 @@ fn decode(address: u32, opcode: u32) -> Instruction {
 		0b001 => {
 			let immediate = (opcode & 0b00000000000000000000000011111111) as u8;
 
-			let rotate = (opcode & 0b00000000000000000000111100000000).wrapping_shr(0x8) as u8;
+			let rotate = (opcode & 0b00000000000000000000111100000000).wrapping_shr(0x8);
 
 			let destination = (opcode & 0b00000000000000001111000000000000).wrapping_shr(0xC) as u8;
 
@@ -164,7 +165,8 @@ fn decode(address: u32, opcode: u32) -> Instruction {
 
 			let _s = opcode & 0b00000000000100000000000000000000 != 0x0;
 
-			let immediate = (immediate as u32).rotate_right(rotate as u32);
+			let rotate = rotate << 0x1;
+			let immediate = (immediate as u32).rotate_right(rotate);
 
 			match (opcode & 0b00000001111000000000000000000000).wrapping_shr(0x15) {
 				0b0000 => {},

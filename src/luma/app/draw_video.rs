@@ -21,7 +21,7 @@
 	If not, see <https://www.gnu.org/licenses/>.
 */
 
-use crate::luma::{decode_colour, SCREEN_SIZE};
+use crate::luma::SCREEN_SIZE;
 use crate::luma::app::App;
 
 use sdl2::pixels::Color;
@@ -33,10 +33,11 @@ impl App {
 
 		let mut palette: [Color; 0x100] = [Color::RGB(0x00, 0x00, 0x00); 0x100];
 
-		for (index, value) in (&agb_palette[0x0..0x100]).into_iter().enumerate() {
-			let colour = decode_colour(*value);
+		for (index, element) in palette.iter_mut().enumerate() {
+			let value = unsafe { *agb_palette.get_unchecked(index) };
 
-			palette[index] = colour;
+			let colour = decode_colour(value);
+			*element = colour;
 		}
 
 		for pixel_y in 0x0..SCREEN_SIZE.1 {
@@ -59,4 +60,12 @@ impl App {
 
 		self.canvas.present();
 	}
+}
+
+fn decode_colour(colour: u16) -> Color {
+	let red   = ((colour & 0b0000000000011111) as f32 / 31.0    * 255.0) as u8;
+	let green = ((colour & 0b0000001111100000) as f32 / 992.0   * 255.0) as u8;
+	let blue  = ((colour & 0b0111110000000000) as f32 / 31744.0 * 255.0) as u8;
+
+	return Color::RGB(red, green, blue);
 }

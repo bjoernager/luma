@@ -53,8 +53,6 @@ impl App {
 			self.sync_video(frame_start);
 		}
 
-		cpu.kill()?;
-
 		return Ok(());
 	}
 }

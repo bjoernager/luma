@@ -40,7 +40,8 @@ impl Cpu {
 
 		drop(state);
 
-		log(&format!("{opcode:#018b}                 @ {address:#010X} - ({})", self.cycle));
+		log!();
+		log!("                \u{1B}[1m{opcode:016b}\u{1B}[0m @ \u{1B}[1m{address:08X}\u{1B}[0m - ({})", self.cycle);
 
 		match (opcode & 0b1110000000000000).wrapping_shr(0xD) {
 			0b000 => {
@@ -115,42 +116,42 @@ impl Cpu {
 							0b0 => {
 								match (opcode & 0b0000010000000000).wrapping_shr(0xA) {
 									0b0 => {
-										let destination = (opcode & 0b0000000000000111) as u8;
+										let left = (opcode & 0b0000000000000111) as u8;
 
-										let base = (opcode & 0b0000000000111000).wrapping_shr(0x3) as u8;
+										let right = (opcode & 0b0000000000111000).wrapping_shr(0x3) as u8;
 
 										match (opcode & 0b0000001111000000).wrapping_shr(0x6) {
-											0b0000 => {},
+											0b0000 => return AndRegister(left, left, right),
 
-											0b0001 => {},
+											0b0001 => return ExclusiveOrRegister(left, left, right),
 
-											0b0010 => {},
+											0b0010 => return MoveRegisterLogicalShiftLeftImmediate(left, left, right),
 
-											0b0011 => {},
+											0b0011 => return MoveRegisterLogicalShiftRightImmediate(left, left, right),
 
-											0b0100 => {},
+											0b0100 => return MoveRegisterArithmeticShiftRight(left, left, right),
 
-											0b0101 => {},
+											0b0101 => return AddCarryRegister(left, left, right),
 
-											0b0110 => {},
+											0b0110 => return SubtractCarryRegister(left, left, right),
 
-											0b0111 => {},
+											0b0111 => return MoveRegisterRotateRight(left, left, right),
 
-											0b1000 => {},
+											0b1000 => return TestRegister(left, right),
 
-											0b1001 => {},
+											0b1001 => return ReverseSubtractImmediate(left, right, 0x0),
 
-											0b1010 => return CompareRegister(destination, base),
+											0b1010 => return CompareRegister(left, right),
 
-											0b1011 => {},
+											0b1011 => return CompareNegativeRegister(left, right),
 
-											0b1100 => {},
+											0b1100 => return LogicalOrRegister(left, right, right),
 
-											0b1101 => {},
+											0b1101 => return MultiplyRegister(left, left, right),
 
-											0b1110 => {},
+											0b1110 => return BitClearRegister(left, left, right),
 
-											0b1111 => {},
+											0b1111 => return MoveNotRegister(left, right),
 
 											_ => unsafe { unreachable_unchecked() },
 										}

@@ -111,23 +111,25 @@ start:
 	@ - r3 is the last pixel address.
 	ldr  r0, .videoAddr
 	ldr  r1, .paletteIndex
-	movs r2, 0x0
+	bics r2, r2
 	movs r3, 0x4B
 	lsls r3, 0x9
 	adds r3, r0
 
 	@ Plot pixels:
+	@ TO-DO: Plot correctly (bytewise).
 .loop:
 	strb r1, [r0]
 	adds r0, r2
 	adds r2, 0x1
 	cmp  r0, r3
-	bge  .stop @ Stop if we've reached the end.
+	bge  .restart
 	b    .loop @ Repeat loop.
 
-	@ Stop:
-.stop:
-	b .stop
+	@ Restart loop:
+.restart:
+	ldr  r0, .videoAddr
+	b    .loop
 .endfunc
 
 .align

@@ -25,16 +25,13 @@ use crate::luma::cpu_handle::CpuHandle;
 
 use std::sync::atomic::Ordering;
 
-impl CpuHandle {
-	#[must_use]
-	pub fn kill(self) -> Result<(), String> {
+impl Drop for CpuHandle {
+	fn drop(&mut self) {
 		eprintln!("got kill order");
 
+		let handle = self.handle.take().unwrap();
+
 		self.dead.store(true, Ordering::Relaxed);
-		self.handle.join().unwrap();
-
-		self.dead.store(false, Ordering::Relaxed);
-
-		return Ok(());
+		handle.join().unwrap();
 	}
 }

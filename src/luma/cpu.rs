@@ -27,28 +27,16 @@ use crate::luma::state::State;
 use std::sync::{Arc, Mutex};
 use std::sync::atomic::AtomicBool;
 
-pub mod add;
 pub mod boot;
-pub mod branch;
-pub mod compare;
-pub mod r#continue;
 pub mod decode_arm;
 pub mod decode_thumb;
-pub mod load;
-pub mod r#move;
-pub mod store;
-pub mod subtract;
-
-pub type Decoder = fn(&mut Cpu) -> Instruction;
-
-pub struct Cpu {
-	state: Arc<Mutex<State>>,
-	cycle: u64,
-	dead:  Arc<AtomicBool>,
-
-	instruction_size: u32,
-	decoder:          Decoder,
-}
+pub mod isa_arithmetic;
+pub mod isa_bitwise;
+pub mod isa_branch;
+pub mod isa_logic;
+pub mod isa_memory;
+pub mod isa_move;
+pub mod r#continue;
 
 mod exchange;
 mod test_predicate;
@@ -60,6 +48,17 @@ pub use exchange::*;
 
 #[allow(unused_imports)]
 pub use test_predicate::*;
+
+pub type Decoder = fn(&mut Cpu) -> Instruction;
+
+pub struct Cpu {
+	state: Arc<Mutex<State>>,
+	cycle: u64,
+	dead:  Arc<AtomicBool>,
+
+	instruction_size: u32,
+	decoder:          Decoder,
+}
 
 impl Cpu {
 	pub fn new(state: State) -> Self {

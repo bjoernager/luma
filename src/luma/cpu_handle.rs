@@ -27,15 +27,15 @@ use std::sync::{Arc, Mutex};
 use std::sync::atomic::AtomicBool;
 use std::thread::JoinHandle;
 
+pub mod drop;
 pub mod dump_video;
 pub mod dump_palette;
-pub mod kill;
 
 pub struct CpuHandle {
 	state: Arc<Mutex<State>>,
 	dead:  Arc<AtomicBool>,
 
-	handle: JoinHandle<()>,
+	handle: Option<JoinHandle<()>>,
 }
 
 impl CpuHandle {
@@ -49,7 +49,7 @@ impl CpuHandle {
 			state: state,
 			dead:  dead,
 
-			handle: handle,
+			handle: Some(handle),
 		};
 	}
 }

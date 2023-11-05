@@ -1,3 +1,13 @@
+# 0.2E
+
+* Update readme
+* Implement remaining data-processing instructions with register operands in Thumb
+* Extend memory writes according to region
+* Fix colour decoding
+* Improve logging
+* Update code structure
+* Implement read-only memory
+
 # 0.2D
 
 * Reformat changelog in Markdown
