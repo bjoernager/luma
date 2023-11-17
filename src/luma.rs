@@ -21,18 +21,27 @@
 	If not, see <https://www.gnu.org/licenses/>.
 */
 
+extern crate ctrlc;
+extern crate sdl2;
+extern crate toml;
+
 pub mod app;
 pub mod configuration;
 pub mod cpu;
 pub mod cpu_handle;
+pub mod cpu_mode;
+pub mod exception;
 pub mod instruction;
+pub mod predicate;
+pub mod shifter;
 pub mod state;
 
 pub const VERSION: (u32, u32) = (
 	0x0,  // major
-	0x2E, // minor
+	0x2F, // minor
 );
 
+#[derive(Clone, Copy)]
 pub enum Error {
 	BadAlignment(      u32, u32),
 	InvalidArmOpcode(  u32, u32),
@@ -67,7 +76,7 @@ pub const SCREEN_SIZE: (u8, u8) = (
 
 macro_rules! log {
 	() => {
-		eprintln!();
+		if cfg!(debug_assertions) { eprintln!() };
 	};
 
 	($($message: tt)*) => {{
@@ -80,11 +89,20 @@ pub(crate) use log;
 
 macro_rules! log_assignment {
 	($name: expr, $value: expr) => {{
-		use crate::luma::log;
+		use crate::log;
 
-		if cfg!(debug_assertions) {
-			log!("\u{1B}[3m\u{B7} \u{1B}[1m{}\u{1B}[22m = {}\u{1B}[0m", format!($name), format!($value));
-		}
+		log!("\u{1B}[3m\u{B7} \u{1B}[1m{}\u{1B}[22m = {}\u{1B}[0m", $name, $value);
 	}};
 }
 pub(crate) use log_assignment;
+
+macro_rules! log_status {
+	($($message: tt)*) => {{
+		use crate::log;
+
+		log!("({})", format!($($message)?));
+	}};
+}
+pub(crate) use log_status;
+
+fn main() { app::App::main() }

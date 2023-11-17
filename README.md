@@ -1,6 +1,6 @@
 # Luma
 
-luma is an emulator for the AGB&mdash;Game Boy Advance platform.
+Luma is an emulator for the AGB&mdash;Game Boy Advance platform.
 
 # Usage
 

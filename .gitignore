@@ -1,5 +1,8 @@
 *.agb
+*.bin
+*.dmg
 *.elf
+*.gba
 *.o
 *.sav
 vgcore.*

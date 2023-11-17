@@ -1,0 +1,27 @@
+<svg height="96" width="96" xmlns="http://www.w3.org/2000/svg">
+	<!-- gradients -->
+	<linearGradient id="backgroundColour" x1="0" x2="1" y1="0" y2="1">
+		<stop offset="0%" stop-color="#222222" />
+	</linearGradient>
+	<!-- masks -->
+	<mask id="foreground">
+			<polygon points="12,12 42,12 42,42 22,42 12,32" fill="white" />
+			<circle cx="22" cy="32" fill="white" r="10" />
+			<polygon points="22,6 48,6 48,32 22,32" fill="black" />
+
+			<circle cx="64" cy="32" fill="white" r="10" />
+			<circle cx="74" cy="32" fill="white" r="10" />
+			<polygon points="54,12 84,12 84,32 74,42 64,42 54,32" fill="white" />
+			<polygon points="64,6 74,6 74,32 64,32" fill="black" />
+
+			<polygon points="12,54 42,54 27,69 42,69 42,84 27,69 12,84" fill="white" />
+
+			<circle cx="64" cy="64" fill="white" r="10" />
+			<circle cx="74" cy="64" fill="white" r="10" />
+			<polygon points="64,54 74,54 84,64 84,84 54,84 54,64" fill="white" />
+			<polygon points="64,64 74,64 74,90 64,90" fill="black" />
+	</mask>
+	<!-- fills -->
+	<rect fill="#6051b2" height="96" width="96" x="0" y="0" />
+	<rect fill="#FFFFFF" height="96" mask="url(#foreground)" width="96" x="0" y="0" />
+</svg>

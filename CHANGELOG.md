@@ -1,3 +1,19 @@
+# 0.2F
+
+* Add logo
+* Implement exceptions (including banked registers)
+* Implement software interrupts
+* Add custom bootloader
+* Update readme
+* Support condition-setting instructions
+* Implement all data-processing instructions
+* Support conditional execution (predicates)
+* Rework shifter instructions
+* Rework pipeline
+* Rework file structure
+* Update gitignore
+* Update naming convention
+
 # 0.2E
 
 * Update readme
